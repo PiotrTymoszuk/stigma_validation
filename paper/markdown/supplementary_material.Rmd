@@ -1,0 +1,119 @@
+---
+title: "Persisting somatic symptoms following COVID-19 as well as mental health status are associated with changes in neurotransmitter precursor amino acid levels – a psychoneuroimmunological study"
+subtitle: "Supplementary Material"
+author: "PSY Team"
+date: "`r format(Sys.time(), '%Y-%m-%d')`"
+
+output: 
+  bookdown::word_document2:   
+    reference_docx: ms_template.docx
+    
+bibliography: infl_biblio.bib
+csl: frontiers-in-immunology.csl
+header-includes:
+  \usepackage{longtable}
+  \usepackage{tabu}
+  \usepackage{caption}
+  \usepackage{makecell}
+  \usepackage{pdflscape}
+  \usepackage{array}
+  \usepackage{booktabs}
+  \usepackage{threeparttable}
+  \usepackage{threeparttablex}
+  \usepackage{wrapfig}
+  \usepackage{multirow}
+  \usepackage[normalem]{ulem}
+  \usepackage{colortbl}
+  \usepackage{xcolor}
+  \usepackage{float} \floatplacement{figure}{H} \floatplacement{table}{H}
+  \newcommand{\beginsupplement}{\setcounter{table}{0}  \renewcommand{\thetable}{S\arabic{table}}       \setcounter{figure}{0} \renewcommand{\thefigure}{S\arabic{figure}}}
+---
+
+```{r, setup, include = FALSE}
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, 
+                      dev = "png", dpi = 600, 
+                      tab.cap.pre = 'Supplementary Table ', tab.cap.sep = " ", 
+                      tab.cap.style = 'Table Heading')
+
+set_flextable_defaults(font.family = 'Cambria', font.size = 10)
+
+
+```
+
+\newpage
+
+# Supplementary Methods
+
+## External data import and transformation
+
+Proteome and metabolome data in form of normalized, age- and sex-adjusted, log~2~-transformed serum levels as well as clinical information (sex, SARS-CoV-2 infection status, COVID-19 severity, timepoint, post-COVID-19 syndrome status and particular symptoms) for the INCOV cohort were extracted from supplementary tables accompanying the report by Su and colleagues [@Su2022]. 
+
+Characteristic of the INCOV cohorts is presented in __Table 2__. 
+Numbers of available INCOV cohort samples and the sampling timepoints are shown in __Supplementary Table S\@ref(tab:tab-samples)__.
+
+## Software
+
+Proteome and metabolome data were analyzed with R version 4.2.0. 
+General data transformation tasks were accomplished with the _tidyverse_ package bundle [@Wickham2019], _rlang_ [@Henry2022] and the development package _trafo_ (https://github.com/PiotrTymoszuk/trafo). 
+Statistical data analysis was done with the packages _rstatix_ [@Kassambara2021], _ggpubr_ [@Kassambara2020] along with the development package _ExDA_ (https://github.com/PiotrTymoszuk/ExDA).
+Results were visualized with tools provided by the packages _ggplot2_ [@Wickham2016], _cowplot_ [@Wilke2019] and _ExDA_. 
+Manuscript and supplementary tables were created with _flextable_ [@Gohel2022]. 
+Supplementary Material file was written in the _rmarkdown_ environment [@Allaire2022] and rendered with the _knitr_ [@Xie2022] and _booksdown_ [@Xie2016] packages.
+
+## Statistical analysis of the cytokine and metabolite INCOV cohort data
+
+Distribution normality and homogeneity of normalized cytokine and metabolite serum levels was assessed by Shapiro-Wilk and Levene tests, respectively. 
+Comparison of normalized serum cytokine and metabolite levels between healthy controls and COVID-19 individuals at consecutive timepoints after symptom onset was done with Kruskal-Wallis test. 
+Differences between healthy controls and consecutive timepoints of COVID-19 were investigated with Mann-Whitney U test corrected for multiple testing with Benjamini-Hochberg method [@Benjamini1995]. 
+Correlation of serum cytokine and metabolite levels in healthy controls and COVID-19 individuals at consecutive timepoints was analyzed with Spearman test.
+For comparison of normalized serum levels of cytokines and metabolites during COVID-19 convalescence between healthy controls, COVID-19 individuals without persistent symptoms, COVID-19 individuals with persistent putative psychiatric symptoms (depression, anxiety or sleep disorders) and COVID-19 individuals with other persistent symptoms Kruskal-Wallis test with Mann-Whitney post-hoc test was employed.
+
+## Data and code availability
+
+Anonymized local cohort data will be made available upon request to the corresponding author. 
+The INCOV cohort data are publicly available.
+The study pipeline code is available at https://github.com/PiotrTymoszuk/stigma_validation.
+
+\newpage
+
+# Supplementary Tables
+
+```{r tab-samples, tab.cap = 'Number of available samples and sampling timepoints in the INCOV cohort.'}
+
+flextable::flextable(suppl_tabs$samples) %>% 
+  width(1, width = 4, unit = 'cm') %>% 
+  width(2, width = 6, unit = 'cm') %>% 
+  width(3, width = 4, unit = 'cm') %>% 
+  footnote(1, 2, value = as_paragraph('Median with interquartile range, days after symptom onset.'), ref_symbols = 'a', part = 'header') %>% 
+  theme_vanilla
+
+```
+
+\newpage
+
+# Supplementary Figures
+
+```{r fig-incov-neuro-cyto, fig.width = mm_inch(suppl$incov_neuro_cyto$w), fig.height = mm_inch(suppl$incov_neuro_cyto$h), fig.cap = 'Serum levels of cytokines in healthy controls, complete COVID-19 recovery, non-neurological and neurological persistent symptoms in the INCOV cohort.'}
+
+suppl$incov_neuro_cyto$plot
+
+```
+
+__Figure \@ref(fig:fig-incov-neuro-cyto). Serum levels of cytokines in healthy controls, complete COVID-19 recovery, non-neurological and neurological persistent symptoms in the INCOV cohort.__ 
+_Normalized serum levels of IL6, IL10, TNF-alpha (TNF), IFN-gamma (IFNG) were extracted from the INCOV study data for healthy controls and COVID-19 participants during convalescence (median: 64 days after symptom onset). The serum levels were compared between healthy controls, COVID-19 subjects without persistent symptoms, COVID-19 subjects with putative neurological persistent symptoms (self-reported neurological symptoms, blurry vision, dizziness, feet or hand pain, smell or taste disorders) and COVID-19 subjects with other non-neurological persistent symptoms with Kruskal-Wallis test. Pairwise comparisons between the groups were done with Benjamini-Hochberg-corrected Mann-Whitney post-hoc test. Each point in the plots represent a single sample, boxes depict medians with interquartile ranges (IQR), whiskers span over 150% IQR. Kruskal-Wallis test p values are displayed in the plot captions. Significant and near-significant (p < 0.1) post-hoc test results are indicated in the plots. Numbers of complete observations are shown below the plots._
+
+\newpage
+
+```{r fig-incov-neuro-trp, fig.width = mm_inch(suppl$incov_neuro_trp$w), fig.height = mm_inch(suppl$incov_neuro_trp$h), fig.cap = 'Serum levels of TRP degradation products in healthy controls, complete COVID-19 recovery, non-neurological and neurological persistent symptoms in the INCOV cohort.'}
+
+suppl$incov_neuro_trp$plot
+
+```
+
+__Figure \@ref(fig:fig-incov-neuro-trp). Serum levels of TRP degradation products in healthy controls, complete COVID-19 recovery, non-neurological and neurological persistent symptoms in the INCOV cohort.__ 
+_Normalized serum levels of tryptophan (TRP), serotonin (5-HT), kynurenine (KYN) and quinolinic acid (QUIN) were extracted from the INCOV study data for healthy controls and COVID-19 participants during convalescence (median: 64 days after symptom onset). The serum levels were compared between healthy controls, COVID-19 subjects without persistent symptoms, COVID-19 subjects with putative neurological persistent symptoms (self-reported neurological symptoms, blurry vision, dizziness, feet or hand pain, smell or taste disorders) and COVID-19 subjects with other non-neurological persistent symptoms with Kruskal-Wallis test. Pairwise comparisons between the groups were done with Benjamini-Hochberg-corrected Mann-Whitney post-hoc test. Each point in the plots represent a single sample, boxes depict medians with interquartile ranges (IQR), whiskers span over 150% IQR. Kruskal-Wallis test p values are displayed in the plot captions. Significant and near-significant (p < 0.1) post-hoc test results are indicated in the plots. Numbers of complete observations are shown below the plots._
+
+\newpage
+
+# References

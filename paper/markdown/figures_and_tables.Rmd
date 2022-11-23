@@ -1,0 +1,202 @@
+---
+title: "Persisting somatic symptoms following COVID-19 as well as mental health status are associated with changes in neurotransmitter precursor amino acid levels – a psychoneuroimmunological study"
+subtitle: "Manuscript parts"
+date: "`r format(Sys.time(), '%Y-%m-%d')`"
+
+output: 
+  bookdown::word_document2:   
+    reference_docx: ms_template.docx
+
+bibliography: infl_biblio.bib
+
+csl: frontiers-in-immunology.csl
+
+header-includes:
+  \usepackage{longtable}
+  \usepackage{tabu}
+  \usepackage{caption}
+  \usepackage{makecell}
+  \usepackage{pdflscape}
+  \usepackage{array}
+  \usepackage{booktabs}
+  \usepackage{threeparttable}
+  \usepackage{threeparttablex}
+  \usepackage{wrapfig}
+  \usepackage{multirow}
+  \usepackage[normalem]{ulem}
+  \usepackage{colortbl}
+  \usepackage{xcolor}
+  \usepackage{float} \floatplacement{figure}{H} \floatplacement{table}{H}
+  \newcommand{\beginsupplement}{\setcounter{table}{0}  \renewcommand{\thetable}{S\arabic{table}}       \setcounter{figure}{0} \renewcommand{\thefigure}{S\arabic{figure}}}
+---
+
+```{r, setup, include = FALSE}
+
+library(bookdown)
+library(flextable)
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, 
+                      dev = "png", dpi = 600, 
+                      tab.cap.pre = 'Supplementary Table ', tab.cap.sep = " ", 
+                      tab.cap.style = 'Table Heading')
+
+set_flextable_defaults(font.family = 'Cambria', font.size = 10)
+
+
+```
+
+\newpage
+
+
+# Methods (bioinformatic part)
+
+## Analysis of cytokine and TRP metabolite data in the INCOV cohort
+
+Details of bioinformatic analysis are provided in __Supplementary Methods__. 
+
+Normalized, age- and sex-adjusted, log~2~-transformed serum proteing and metabolite levels and clinical data for the INCOV cohort were extracted from supplementary tables accompanying the report by Su at al. [@Su2022]. 
+The characteristics of healthy controls and COVID-19 participants of the INCOV cohort are presented in __Table \@ref(tab:tab-cohort)__.
+
+Comparison of serum metabolite and cytokine levels between healthy controls and COVID-19 individuals at consecutive timepoints after infection was done with Kruskal-Wallis test with Mann-Whitney post-hoc test with Benjamini-Hochberg correction for multiple testing [@Benjamini1995]. 
+Correlation of metabolite and cytokine serum levels was investigated by Spearman test. 
+Serum levels of metabolites and cytokines in healthy controls, COVID-19 subjects without persistent symptoms, COVID-19 subjects with putative psychiatric persistent symptoms (depression, anxiety or sleep disorders) and COVID-19 subjects with other non-psychiatric persistent symptoms were compared with Kruskal-Wallis test (packages _rstatix_ [@Kassambara2021], _ggpubr_ [@Kassambara2020] and _ExDA_, https://github.com/PiotrTymoszuk/exda). 
+
+\newpage
+
+# Results (bioinformatic part)
+
+## Serum TRP and TRP degradation products are associated with cytokine levels and persistent COVID-19 symptoms in the publicly available INCOV cohort
+
+To validate our observations on regulation of TRP metabolism during COVID-19 convalescence, we re-analyzed published proteome and metabolome data of the INCOV collective (__Table \@ref(tab:tab-cohort)__, __Supplementary Table S1__) [@Su2022]. 
+In the INCOV study participants, serum levels of key inflammatory cytokines, IL6, IL10, TNF-alpha and IFN-gamma, as well as main immunosuppressive metabolites of the TRYCATS pathway, kynurenine (KYN) and quinolinic acid (QUIN), peaked during acute (median: 11 days after symptom onset) and sub-acute COVID-19 (median 17 days after symptom onset) and decreased to levels comparable with healthy control during late convalescence (median: 64 days after symptom onset). 
+At the same time, serum tryptophan (TRP) concentrations reached their minimum during acute disease and returned to near-healthy levels during late convalescence. 
+Circulating serotonin concentrations rose significantly throughout COVID-19 recovery (__Figure \@ref(fig:fig-incov-cyto) - \@ref(fig:fig-incov-trp)__).
+Furthermore, at each analyzed timepoint of acute COVID-19 and COVID-19 convalescence, serum KYN and QUIN correlated significantly with each of blood IL6, IL10, TNF-alpha and IFN-gamma concentrations. 
+Serum concentrations of TRP and 5-HT were significantly negatively associated with blood levels of all investigated cytokines during acute and sub-acute COVID-19  (__Figure \@ref(fig:fig-corr-incov)__). 
+These results of the time course and correlation analyses indicate that circulating amounts of KYN, QUIN and TRP are closely linked with systemic inflammation during COVID-19 and COVID-19 recovery.
+
+Next, we compared cytokine and TRP metabolism product levels in the INCOV cohort during COVID-19 convalescence, i.e. at median 64 days after symptom onset, between healthy controls, fully recovered COVID-19 participants, COVID-19 participants with putative self-reported psychiatric symptoms (depression, anxiety or sleep problems) and COVID-19 participants suffering from other non-psychiatric persistent symptoms.
+In such analysis, we could detect significantly higher concentration of serum IL6, IL10 and TNF-alpha in COVID-19 convalescents, irrespective of their persistent symptom status, as compared with healthy controls (__Figure \@ref(fig:fig-incov-long-cyto)__). 
+Interestingly, serum TRP tended to be lower and QUIN tended to be substantially higher in the INCOV study participants with persistent depression, anxiety or sleep disorders as compared with the subjects suffering from other persistent symptoms. 
+In this analysis, circulating 5-HT levels were generally higher in COVID-19 convalescents than in healthy controls and tended to rise even further in convalescents with non-mental persistent complaints (__Figure \@ref(fig:fig-incov-long-trp)__).
+Similar tendencies in regulation of cytokines and a lowered systemic availability of TRP could be observed for COVID-19 participants of the INCOV study suffering from self-reported, putative neurological symptoms are compared with non-neurological forms of pos-COVID-19 condition (__Supplementary Figures S1 - S2__). 
+
+In sum, the validation INCOV analyses suggest that mental health manifestations and neurological symptoms of post-COVID-19 condition may go hand in hand with lowered systemic availability of the serotonin precursor TRP and higher activity of the TRYCATS metabolic pathway.
+
+# Discussion (bioinformatic part)
+
+Points to discuss:
+
+* in our local cohort, we see more KYN/TRP reminiscent of higher IDO1 activity in post-COVID-19 condition but can not correlate it with crude markers of systemic inflammation. Consequently, we argue, this may be an effect of low-grade or compartmentalized (e.g. nervous system) inflammation.
+
+* serum metabolomics and proteomics data from the INCOV validation cohort [@Su2022] indicate strongly, that systemic availability of the serotonin precursor TRP and circulating amounts of kynurenine and quinolinic acid, the products of IDO1-mediated TRP decay stays under control of systemic inflammation during acute COVID-19 and recovery.
+
+* interestingly, in the INCOV cohort, serum levels of inflammatory cytokines were comparable in fully recovered COVID-19 patients, subjects with mental health  or neurological manifestations of post-COVID-19 condition and participants affected by non-mental persistent symptoms. Yet, COVID-19-associated depression, anxiety, sleep problems  and self-reported neurological abnormalities were paralleled by substantially lower circulating TRP levels and higher serum amounts of quinolinic acid.
+
+\newpage
+
+## Data and code availability
+
+Anonymized patient data will be made available upon request to the corresponding author. 
+The INCOV cohort data are publicly available.
+The study pipeline code is available at https://github.com/PiotrTymoszuk/stigma_validation.
+
+\newpage
+
+# Tables
+
+```{r tab-cohort-baseline, tab.cap = 'Characteristic of the study cohort (placeholder).'}
+
+tibble(param = ' ') %>% 
+  set_names(' ') %>% 
+  flextable
+
+```
+
+\newpage
+
+```{r tab-cohort, tab.cap = 'Characteristic of the external INCOV cohort. Numeric varaibles are displayed as medians with interquartile ranges. Categorical varaibles are presented as percent and numbers within the complete observation set.'}
+
+flextable::flextable(tabs$cohort) %>% 
+  width(1, width = 4, unit = 'cm') %>% 
+  width(2:3, width = 4.5, unit = 'cm') %>% 
+  width(4, width = 3, unit = 'cm') %>% 
+  width(5, width = 3, unit = 'cm') %>% 
+  footnote(3, 1, value = as_paragraph('Body mass index'), ref_symbols = 'a', part = 'body') %>% 
+  footnote(4, 1, value = as_paragraph('Normal: BMI < 25, overweight: BMI 25 - 30, obesity: BMI > 30 kg/m\u00B2'), ref_symbols = 'b', part = 'body') %>% 
+  footnote(6, 1, value = as_paragraph('Mild: WHO ordinal scale for clinical improvement 1 - 2, moderate: 3 - 4, severe: 5 - 6, critical: 7'), ref_symbols = 'c', part = 'body') %>% 
+  footnote(7, 1, value = as_paragraph('Defined as participants with at least one persistent symptom during convalescence (median: 64 days after symptom onset).'), ref_symbols = 'd', part = 'body') %>% 
+  theme_vanilla
+
+```
+
+\newpage
+
+# Figures
+
+```{r fig-ancova, fig.width = mm_inch(180), fig.height = mm_inch(180), fig.cap = 'ANCOVA results (placeholder).'}
+
+ggdraw()
+
+```
+
+__Figure \@ref(fig:fig-ancova). ANCOVA results (placeholder).__ 
+
+\newpage
+
+```{r fig-incov-cyto, fig.width = mm_inch(figs$incov_cyto$w), fig.height = mm_inch(figs$incov_cyto$h), fig.cap = 'Serum levels of cytokines in healthy controls and COVID-19 individuals in the INCOV cohort'}
+
+figs$incov_cyto$plot
+
+```
+
+__Figure \@ref(fig:fig-incov-cyto). Serum levels of cytokines in healthy controls and COVID-19 individuals in the INCOV cohort__ 
+_Normalized serum levels of IL6, IL10, TNF-alpha (TNF), IFN-gamma (IFNG) were extracted from the INCOV study data for healthy controls and COVID-19 participants at consecutive timepoints after symptom onset (acute: median 11 days, sub-acute: 17 days, convalescence: 64 days). Statistical significance was assessed by Kruskal-Wallis test with Benjamini-Hochberg-corrected Mann-Whitney post-hoc test. Each point in the plots represent a single sample, boxes depict medians with interquartile ranges (IQR), whiskers span over 150% IQR. Kruskal-Wallis P values are displayed in the plot captions. Significant and near significant (p < 0.1) results of post-hoc tests are presented in the plots. Numbers of complete observations are shown below the plots._
+
+\newpage
+
+```{r fig-incov-trp, fig.width = mm_inch(figs$incov_trp$w), fig.height = mm_inch(figs$incov_trp$h), fig.cap = 'Serum levels of TRP degradation products in healthy controls and COVID-19 individuals in the INCOV cohort'}
+
+figs$incov_trp$plot
+
+```
+
+__Figure \@ref(fig:fig-incov-trp). Serum levels of TRP degradation products in healthy controls and COVID-19 individuals in the INCOV cohort__ 
+_Normalized serum levels of tryptophan (TRP), serotonin (5-HT), kynurenine (KYN) and quinolinic acid (QUIN) were extracted from the INCOV study data for healthy controls and COVID-19 participants at consecutive timepoints after symptom onset (acute: median 11 days, sub-acute: 17 days, convalescence: 64 days). Statistical significance was assessed by Kruskal-Wallis test with Benjamini-Hochberg-corrected Mann-Whitney post-hoc test. Each point in the plots represent a single sample, boxes depict medians with interquartile ranges (IQR), whiskers span over 150% IQR. Kruskal-Wallis P values are displayed in the plot captions. Significant and near significant (p < 0.1) results of post-hoc tests are presented in the plots. Numbers of complete observations are shown below the plots._
+
+\newpage
+
+```{r fig-corr-incov, fig.width = mm_inch(figs$corr_incov$w), fig.height = mm_inch(figs$corr_incov$h), fig.cap = 'Correlation of serum levels of cytokines, TRP and TRP degradation products in acute COVID-19 and convalescence in the INCOV cohort.'}
+
+figs$corr_incov$plot
+
+```
+
+__Figure \@ref(fig:fig-corr-incov). Correlation of serum levels of cytokines, TRP and TRP degradation products in acute COVID-19 and convalescence in the INCOV cohort.__ 
+_Normalized levels of tryptophan (TRP), serotonin (5-HT), kynurenine (KYN) and quinolinic acid (QUIN) were correlated with normalized serum levels of IL6, IL10, TNF-alpha (TNF) and IFN-gamma (IFNG) in healthy controls and COVID-19 participants of the INCOV study at consecutive time points after symptom onset (acute: median 11 days, sub-acute: 17 days, convalescence: 64 days) with Spearman test. Correlation coefficients ($\rho$) for the significant correlations are presented in bubble plots. Point size corresponds to the absolute value of correlation coefficient, point color codes for the correlation coefficient value. Points are labeled with their correlation coefficient values. Numbers of samples are indicated in the plot captions._
+
+\newpage
+
+```{r fig-incov-long-cyto, fig.width = mm_inch(figs$incov_long_cyto$w), fig.height = mm_inch(figs$incov_long_cyto$h), fig.cap = 'Serum levels of cytokines in healthy controls, complete COVID-19 recovery, non-psychiatric and psychiatric persistent symptoms in the INCOV cohort.'}
+
+figs$incov_long_cyto$plot
+
+```
+
+__Figure \@ref(fig:fig-incov-long-cyto). Serum levels of cytokines in healthy controls, complete COVID-19 recovery, non-psychiatric and psychiatric persistent symptoms in the INCOV cohort.__ 
+_Normalized serum levels of IL6, IL10, TNF-alpha (TNF), IFN-gamma (IFNG) were extracted from the INCOV study data for healthy controls and COVID-19 participants during convalescence (median: 64 days after symptom onset). The serum levels were compared between healthy controls, COVID-19 subjects without persistent symptoms, COVID-19 subjects with putative psychiatric persistent symptoms (self-reported depression, anxiety or sleep problems) and COVID-19 subjects with other non-psychiatric persistent symptoms with Kruskal-Wallis test. Pairwise comparisons between the groups were done with Benjamini-Hochberg-corrected Mann-Whitney post-hoc test. Each point in the plots represent a single sample, boxes depict medians with interquartile ranges (IQR), whiskers span over 150% IQR. Kruskal-Wallis test p values are displayed in the plot captions. Significant and near-significant (p < 0.1) post-hoc test results are indicated in the plots. Numbers of complete observations are shown below the plots._
+
+\newpage
+
+```{r fig-incov-long-trp, fig.width = mm_inch(figs$incov_long_trp$w), fig.height = mm_inch(figs$incov_long_trp$h), fig.cap = 'Serum levels of TRP degradation products in healthy controls, complete COVID-19 recovery, non-psychiatric and psychiatric persistent symptoms in the INCOV cohort.'}
+
+figs$incov_long_trp$plot
+
+```
+
+__Figure \@ref(fig:fig-incov-long-trp). Serum levels of TRP degradation products in healthy controls, complete COVID-19 recovery, non-psychiatric and psychiatric persistent symptoms in the INCOV cohort.__ 
+_Normalized serum levels of tryptophan (TRP), serotonin (5-HT), kynurenine (KYN) and quinolinic acid (QUIN) were extracted from the INCOV study data for healthy controls and COVID-19 participants during convalescence (median: 64 days after symptom onset). The serum levels were compared between healthy controls, COVID-19 subjects without persistent symptoms, COVID-19 subjects with putative psychiatric persistent symptoms (self-reported depression, anxiety or sleep problems) and COVID-19 subjects with other non-psychiatric persistent symptoms with Kruskal-Wallis test. Pairwise comparisons between the groups were done with Benjamini-Hochberg-corrected Mann-Whitney post-hoc test. Each point in the plots represent a single sample, boxes depict medians with interquartile ranges (IQR), whiskers span over 150% IQR. Kruskal-Wallis test p values are displayed in the plot captions. Significant and near-significant (p < 0.1) post-hoc test results are indicated in the plots. Numbers of complete observations are shown below the plots._
+
+\newpage
+
+# References
