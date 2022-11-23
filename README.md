@@ -1,7 +1,11 @@
 # stigma_validation
 Analysis of selected cytokines and metabolites in the publicly available INCOV cohort
 
-# Usage
+## Terms of use
+
+To reference or use the analysis results in your publication, please cite our GitHub repository and, if available, the accompanying publication . The raw data are available upon request to the senior author Prof. Katharina Hüfner.
+
+## Usage
 
 There are development packages required by the analysis pipeline. You may use `devtools` to install them:
 
@@ -26,11 +30,11 @@ source('exec.R')
 
 ```
 
-## Reference
+### Reference
 
 To be provided
 
-## Contact
+### Contact
 
 The maintainer odf the repository is [Piotr Tymoszuk](mailto:piotr.s.tymoszuk@gmail.com). Data requests should be addressed to the corresponding author of the study [Prof. Katharina Hüfner](mailto:Katharina.Huefner@i-med.ac.at).
 
