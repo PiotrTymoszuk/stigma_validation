@@ -1,0 +1,285 @@
+---
+title: "Persistent low-grade inflammation, SARS-CoV-2 infection and mental health deterioration signs impact on systemic levels of aminoacid neurotransmitter precursors"
+subtitle: "Manuscript parts"
+date: "`r format(Sys.time(), '%Y-%m-%d')`"
+
+output: 
+  bookdown::word_document2:   
+    reference_docx: ms_template.docx
+
+bibliography: infl_biblio.bib
+
+csl: frontiers-in-immunology.csl
+
+header-includes:
+  \usepackage{longtable}
+  \usepackage{tabu}
+  \usepackage{caption}
+  \usepackage{makecell}
+  \usepackage{pdflscape}
+  \usepackage{array}
+  \usepackage{booktabs}
+  \usepackage{threeparttable}
+  \usepackage{threeparttablex}
+  \usepackage{wrapfig}
+  \usepackage{multirow}
+  \usepackage[normalem]{ulem}
+  \usepackage{colortbl}
+  \usepackage{xcolor}
+  \usepackage{float} \floatplacement{figure}{H} \floatplacement{table}{H}
+  \newcommand{\beginsupplement}{\setcounter{table}{0}  \renewcommand{\thetable}{S\arabic{table}}       \setcounter{figure}{0} \renewcommand{\thefigure}{S\arabic{figure}}}
+---
+
+```{r, setup, include = FALSE}
+
+library(bookdown)
+library(flextable)
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, 
+                      dev = "png", dpi = 600, 
+                      tab.cap.pre = 'Supplementary Table ', tab.cap.sep = " ", 
+                      tab.cap.style = 'Table Heading')
+
+set_flextable_defaults(font.family = 'Cambria', font.size = 10)
+
+
+```
+
+\newpage
+
+
+# Methods
+
+## Bioinformatic and statistical analysis
+
+R version 4.2.0 was employed for the data analysis.
+
+Normalized, age- and sex-adjusted, log~2~-transformed serum protein and metabolite levels and clinical data for the INCOV cohort were extracted from the report by Su at al. [@Su2022]. 
+
+Normality and homogeneity of variances was investigated by Shapiro-Wilk and Levene test, respectively. 
+Non-parametric tests or normality/homogeneity-improving variable transformations (logarithm and square root) were used in cases of non-normal distribution. 
+Comparison of serum metabolite and cytokine levels between uninfected controls and COVID-19 individuals at consecutive timepoints after infection was done by Kruskal-Wallis test with Benjamini-Hochberg-corrected Mann-Whitney post-hoc test [@Benjamini1995]. 
+Correlation of metabolite and cytokine serum levels was investigated by Spearman test. 
+Correlation of STIGMA dataset metabolite levels with age was accomplished by Pearson test. 
+Significance of differences in STIGMA cohort metabolite and inflammatory marker serum concentrations between participant gender, SARS-CoV-2 and depression/anxiety strata was assessed by two-tailed T test. 
+
+In multi-parameter linear modeling of aminoacid neurotransmitter precursors and their decay products, neopterin (representative inflammation marker), SARS-CoV-2 infection status, depression/anxiety signs (HADS $\geq$ 8), age and gender served as candidate explanatory variables. 
+The models models with the complete explanatory variable set were optimized by Akaike information criterion (AIC) driven backwards elimination of non-significant terms. 
+The normality and homogeneity model residual assumptions were by Shapiro-Wilk and Levene test, respectively, and additionally visually inspected in standard diagnostic plots (residuals versus fitted, quantile-quantile plots). 
+Reproducibility of the optimized multi-parameter models was investigated by repeated cross-validation (50 repeats, 10 folds) and by comparison of the RMSE and $R^2$ statistics obtained with the training dataset and in cross-validation.
+
+Details of bioinformatic and statistical analysis are provided in __Supplementary Methods__.
+
+\newpage
+
+# Results
+
+## Characteristic of the study cohorts
+
+Herein, two independent collectives of uninfected controls and COVID-19 convalescents were analyzed. 
+
+The STIGMA cohort included SARS-CoV-2-negative (n = `r table(stigma$data$cov)[1]`) and -positive patients (n = `r table(stigma$data$cov)[2]`) of the Department of Psychiatry and other clinics of the University Hospital of Innsbruck, Austria. 
+Males represented `r signif(table(stigma$data$sex)[2]/sum(table(stigma$data$sex)) * 100, 2)`% of the cohort and the median age at enrollment was `r signif(table(stigma$data$sex)[2]/sum(table(stigma$data$sex)) * 100, 2)` years. 
+The gender and age structure of the uninfected and SARS-CoV-2 subsets was comparable. 
+Roughly half of the STIGMA cohort individuals was overweight or obese and suffered from at least one somatic comorbidity; these figures were similar for SARS-CoV-2-negative and -positive individuals. 
+The rate of diagnosed psychiatric conditions in the entire SITGMA collective was `r signif(table(stigma$data$psych_comorb)[2]/sum(table(stigma$data$psych_comorb)) * 100, 2)`%. 
+The frequency of mental illness as well as depression and anxiety HADS scores and percentage of individuals with depression or anxiety signs (HADS $\geq$ 8) were significantly higher in the SARS-CoV-2.-negative strata. 
+Approximately three-quarters of the STIGMA SARS-CoV-2-positive STIGMA study participants experienced mild, ambulatory COVID-19 (__Table \@ref(tab:tab-stigma-cohort)__). 
+Besides clinical, demographic and psychometric variables, the STIGMA dataset included serum concentrations of precursors of
+indolamine (tryptophan [TRP]) and catecholamine neurotransmitters (phenylalanine [PHE], tyrosine [TYR]), their decay and inter-conversion markers (kynurenine [KYN], KYN/TRP ratio and PHE/TYR ratio) along with blood markers of inflammation (interleukin 6 [IL6], C-reactive protein [CRP], neopterin [NEO] and neutrophil/lymphocyte ratio [NLR]). 
+In the SARS-CoV-2 participants, these blood parameters were measured at one fixed timepoint in course of COVID-19 convalescence at median __please fill in__ days after the positive SARS-CoV-2 test (IQR: __please fill in__, range: __please fill in__).
+
+The INCOV cohort described by SU and colleagues [@Su2022] included uninfected controls (n = `r (incov$clinic %>% filter(!duplicated(patient_id)) %>% count(cov) %>% .$n)[1]`) and SARS-CoV-2 individuals (n = `r (incov$clinic %>% filter(!duplicated(patient_id)) %>% count(cov) %>% .$n)[2]`). 
+Slightly more than half of the INCOV cohort were female and the percentage of females was significantly higher in the SARS-CoV-2 negative strata. 
+The median age at enrollment in the entire INCOV cohort was `r incov$clinic %>% filter(!duplicated(patient_id)) %>% .$age %>% median(na.rm = TRUE)` year. 
+The age of the SARS-CoV-2-positive participants was significantly higher than SARS-CoV-2-negative controls' age. 
+Approximately two-third of the INCOV cohort participants were overweight or obese and this fraction was significantly higher in  the SARS-CoV-positive subset. 
+The largest fraction of the SARS-CoV-2 INVOV subset had moderate COVID-19 (WHO ordinal scale for clinical improvement: 3 - 4). In 29% of the SARS-CoV-2-positive INVOV participants the course of COVID-19 was mild (WHO: 1 - 2, ambulatory treatment) (__Table \@ref(tab:tab-incov-cohort)__). 
+
+For the INCOV collective, a wide range of serum proteins and metabolites was recorded by high throughput multiplex assays [@Su2022]. 
+Age- and sex-normalized serum concentrations of the indolamine neurotransmitter precursor TRP, its catabolism products KYN and quinolinic acid (QUIN), catecholamine neurotransmitter precursors PHE and TYR along with the inflammatory cytokines IL6, interleukin 10 (IL10), tumor necrosis factor-alpha (TNF) and interferon-gamma (IFNG) were investigated in the current report. 
+These parameters were measured at one fixed timepoint for uninfected controls and at three consecutive timepoints after COVID-19 symptoms onset: acute (median 11 days), sub-acute (17 days) disease and during recovery (64 days) (__Supplementary Table S1__).
+
+## Effects of systemic inflammation on aminoacid neurotransmitter precursors
+
+In the INCOV cohort, the maximum concentration of serum IL6, IL10, TNF and IFNG were detected during acute COVID-19 and returned gradually to near-uninfected levels during convalescence (__Supplementary Figure S1__). 
+The nadir TRP concentrations were observed during acute COVID-19 and went back to levels comparable with uninfected controls during convalescence in the INCOV collective. 
+Concomitantly, courses of TRP decay products, KYN and QUIN, and of catecholamine neurotransmitter precursors PHE and TYR paralleled the time courses of inflammatory cytokines with peaking concentrations in acute COVID-19 (__Figure \@ref(fig:fig-incov-neuro-tc)__). 
+
+Both in the SARS-CoV-2-negative and -positive STIGMA study participants significant moderate-to-strong positive correlations between serum readouts of TRP catabolism KYN, KYN/TRP ratio and inflammatory markers CRP and NEO were observed. 
+CRP correlated significantly with PHE in both SARS-CoV-2 strata (__Figure \@ref(fig:fig-met-infl)A__). 
+These findings were corroborated by a correlation analysis in the INCOV collective. 
+KYN and QUIN concentrations were significantly associated with all investigated inflammatory cytokines in the SARS-CoV-2-positive INCOV strata at each timepoint after COVID-19 onset. 
+TRP correlated significantly and negatively with each of the IL6, IL10, TNF and IFNG in acute and sub-acute COVID-19. 
+PHE levels were negatively correlated with all analyzed cytokines in acute COVID, and with IL6 and IL10 in sub-acute disease. 
+Of note, significant positive association of KYN and QUIN with IL6 and IL10 could be detected in SARS-CoV-2-negative INCOV study participants (__Figure \@ref(fig:fig-met-infl)B__).
+
+Collectively, the temporal relationships and correlations between cytokines and neurotransmitter-related aminoacid metabolites suggest reduced systemic availability of serotonin and elevated availability substrates for dopamine/adrenaline/noradrenaline synthesis mediated by systemic inflammatory reaction during COVID-19. 
+Additionally, activity of TRP/KYN/QUIN degradation pathway was positively associated with COVID-19-independent systemic inflammation as indicated by the correlation analysis results in SARS-CoV-2-negative individuals.
+
+## Effects of SARS-CoV-2 infection and mental health disorder signs on aminoacid neurotransmitter precursors
+
+In the STIGMA collective we could not observe any significant differences in markers of systemic inflammation (IL6, CRP, NEO and NLR) between the SARS-CoV-2-negative individuals and SARS-CoV-2-positive participants investigated during late recovery at median __please fill in__ days after COVID-19 diagnosis (__Supplementary Figure S2A__). 
+This finding is in line with the INCOV cohort data indicating near-uninfected concentrations of inflammatory cytokines at median 64 days after COVID-19 onset (__Supplementary Figure S1__). 
+However, despite the comparable levels of systemic inflammation between the SARS-CoV-2 cohort strata, significantly increased KYN and decreased PHE/TYR ratios were detected in COVID-19 convalescents of the STIGMA cohort (__Figure \@ref(fig:fig-hads-cov)A__). 
+
+There were no differences in systemic inflammation markers between the STIGMA study participants with and without signs of anxiety or depression defined by HADS $\geq$ 8 (__Supplementary Figure S2B__). 
+Yet, serum TRP levels were significantly lower in the depression/anxiety strata. 
+In addition, KYN and PHE levels tended to be lower in the individuals with depression/anxiety symptoms as compared with the depression/anxiety-free subset; this effect was, however, not significant (__Figure \@ref(fig:fig-hads-cov)B__).
+
+Taken together, late COVID-19 convalescence and depression/anxiety signs are likely to stimulate the TRP/KYN degradation pathway and limit systemic availability of the serotonin precursor in an inflammation-independent way.
+
+## Effects of age and sex on aminoacid neurotransmitter precursors
+
+In the entire STIGMA cohort, age affected significantly serum levels of neurotransmitter-related aminoacid metabolites. 
+In more details, the markers of TRP decay and reduced serotonin availability, KYN and KYN/TRP ratio, correlated positively with participant's age with moderate strength. 
+Analogically, TYR was found to be positively associated with age, whereas PHE/TYR ratio decreased with participant's age. 
+Serum TRP and PHE concentrations were virtually age-independent (__Supplementary Figure S3__). 
+We could not detect any significant differences in the investigated aminoacid metabolites between female and male participants of the STIGMA study (__Supplementary Figure S3__).
+
+## Multi-parameter modeling of aminoacid neurotransmitter
+
+To get a more thorough insight at the interplay of demographic background, inflammation, SARS-CoV-2 infection recovery and depression or anxiety symptoms on levels of neurotransmitter-related aminoacids, we resorted to multi-parameter linear regression in the STIGMA collective. 
+The initial models included age, sex, NEO as a representative inflammation marker, COVID-19 recovery and depression/anxiety signs defined by HADS $\geq$ 8 as explanatory variables. 
+The full linear models were constructed and subsequently optimized by AIC-driven backwards elimination of non-significant terms. 
+For six dependent variables analyzed (TRP, KYN, KYN/TRP ratio, PHE, TYR and PHE/TYR ratio), five valid multi-parameter models could be established. 
+The PHE model had a negligible explanatory performance, proved non-significant as compared with the intercept-only null model and was hence not further analyzed (__Supplementary Figure S5__). 
+The remaining multi-parameter models were characterized by good reproducibility and proper parameterization as indicated by comparable fit errors and R^2^ statistic values in the genuine modeling dataset and cross-validation. 
+The KYN and KYN/TRP ratio models had the best explanatory performance measured by R^2 of `r stigma_lm$fit_stats %>% filter(response == 'log_kyn') %>% .$raw_rsq %>% signif(2)` and `r stigma_lm$fit_stats %>% filter(response == 'log_kyn') %>% .$raw_rsq %>% signif(2)`. 
+The TRP, TYR and PHE/TYR ratio models could explain between 10 and 20% of their response variable variances (__Supplementary Figure S5__).
+
+Presence of depression or anxiety signs and concentration of the inflammatory marker NEO were identified as independent factors associated with reduced TRP serum concentrations. 
+In turn, participant's age, NEO and recovery from SARS-CoV-2 infection went hand in hand with a significantly increased KYN concentration and KYN/TRP ratio (__Figure \@ref(fig:fig-multi-model)A__). 
+Serum levels of TYR were found negatively regulated by inflammation gauged by blood NEO and by participant's age. 
+Inflammation could be also identified as a factor significantly increasing PHE/TYR ratio. 
+PHE/TYR ratio was in turn significantly reduced by presence of depression/anxiety signs, SARS-CoV-2 infection recovery and age.
+
+The results of multi-parameter modeling suggest SARS-CoV-2-dependent and -independent inflammation as a significant factor reducing availability of TRP and stimulating its conversion to KYN. 
+This process was additionally stimulated by COVID-19 convalescence and participant's age, independently of the inflammatory background. 
+Depression or anxiety was was associated with reduced TRP in an inflammation-independent manner. 
+The additive effects of inflammation, COVID-19 recovery, signs of depression/anxiety and age may hence  lower systemic availability of the serotonin precursor TRP and predispose to depressive or anxious disorders (__Figure \@ref(fig:fig-summary)__). 
+
+In addition, SARS-CoV-2-dependent and -independent inflammation is likely to inhibit PHE - TYR conversion representing the first step of dopamine synthesis and as such aggravate mental health. 
+By contrast, patient's age, SARS-CoV2 infection convalescence and signs of depression/anxiety were associated with lower PHE/TYR ratios suggestive of more efficient PHE - TYR conversion and putatively higher dopamine availability. 
+This may pose a potentially salutary feedback mechanism (__Figure \@ref(fig:fig-summary)B__).
+
+\newpage
+
+# Discussion
+
+\newpage
+
+## Data and code availability
+
+Anonymized patient data will be made available upon request to the corresponding author. 
+The INCOV cohort data are publicly available.
+The study pipeline code is available at https://github.com/PiotrTymoszuk/stigma_validation.
+
+\newpage
+
+# Tables
+
+```{r tab-stigma-cohort, tab.cap = 'Characteristic of the local STIGMA cohort. Numeric variables are presented as medians with interquartile ranges. Categorical variables are presented as percentages and counts within complete observations.'}
+
+flextable::flextable(tabs$stigma_cohort) %>% 
+  width(1, width = 4, unit = 'cm') %>% 
+  width(2:3, width = 4, unit = 'cm') %>% 
+  width(4:5, width = 2.8, unit = 'cm') %>% 
+  footnote(3, 1, 
+           value = as_paragraph('normal: body mass index [BMI] < 25 kg/mm\u00B2, overweight: BMI 25 - 30 kg/mm\u00B2, obesity: BMI > 30 kg/mm\u00B2'), 
+           part = 'body', 
+           ref_symbols = 'a') %>% 
+  footnote(6:8, 1, 
+           value = as_paragraph('HADS: hospital anxiety and depression scale'), 
+           part = 'body', 
+           ref_symbols = 'b') %>% 
+  footnote(9, 1, 
+           value = as_paragraph('mild: ambulatory care, moderate: hospitalized, normal ward, severe: intensive care unit'), 
+           part = 'body', 
+           ref_symbols = 'c') %>% 
+  theme_vanilla
+
+```
+
+\newpage
+
+```{r tab-incov-cohort, tab.cap = 'Characteristic of the external INCOV cohort. Numeric variables are presented as medians with interquartile ranges. Categorical variables are presented as percentages and counts within complete observations.'}
+
+flextable::flextable(tabs$incov_cohort) %>% 
+  width(1, width = 4, unit = 'cm') %>% 
+  width(2:3, width = 4, unit = 'cm') %>% 
+  width(4:5, width = 2.8, unit = 'cm') %>% 
+  footnote(3, 1, 
+           value = as_paragraph('normal: body mass index [BMI] < 25 kg/mm\u00B2, overweight: BMI 25 - 30 kg/mm\u00B2, obesity: BMI > 30 kg/mm\u00B2'), 
+           part = 'body', 
+           ref_symbols = 'a') %>% 
+  footnote(5, 1, 
+           value = as_paragraph('WHO ordinal scale for clinical improvement; mild: 1 - 2, moderate: 3 - 4, severe: 5 - 6, critical: 7'), 
+           part = 'body', 
+           ref_symbols = 'b') %>% 
+  theme_vanilla
+
+```
+
+\newpage
+
+# Figures
+
+```{r fig-incov-neuro-tc, fig.width = mm_inch(figs$incov_neuro_tc$w), fig.height = mm_inch(figs$incov_neuro_tc$h), fig.cap = 'Serum levels of neurotransmitter precursor and their decay products in course of COVID-19 and recovery.'}
+
+figs$incov_neuro_tc$plot
+
+```
+
+__Figure \@ref(fig:fig-incov-neuro-tc). Serum levels of neurotransmitter precursor and their decay products in course of COVID-19 and recovery.__ 
+_Serum levels of tryptophan (TRP), kynurenine (KYN), quinolinic acid (QUIN), phenylalanine (PHE) and tyrosine (TYR) in serum of uninfected controls and COVID-19 individuals during acute, sub-acute and recovery phase of the disease in the INCOV cohort. Statistical significance was determined by Kruskal-Wallis test with Benjamini-Hochberg-corrected Mann-Whitney U test. Normalized serum level concentrations are presented in box plots. Points represent single samples. The Kruskal-Wallis test results are indicated in the plot captions. Results of the post-hoc tests are indicated in the plots. Numbers of complete observations are displayed under the plots._
+
+\newpage
+
+```{r fig-met-infl, fig.width = mm_inch(figs$met_infl$w), fig.height = mm_inch(figs$met_infl$h), fig.cap = 'Correlation of serum levels of aminoacid precursors of neurotransmitters and their decay products with markers of inflammation.'}
+
+figs$met_infl$plot
+
+```
+
+__Figure \@ref(fig:fig-met-infl). Correlation of serum levels of aminoacid precursors of neurotransmitters and their decay products with markers of inflammation.__ 
+_Serum levels of tryptophan (TRP), kynurenine (KYN), quinolinic acid (QUIN), kynurenine/tryptophan ratio (KYN/TRP), phenylalanine (PHE), tyrosine (TYR) and phenylalanine/tyrosine ratio (PHE/TYR) were correlated with serum levels of inflammatory markers interleukin 6 (IL6), interleukin 10 (IL10), tumor necrosis factor-alpha (TNF), interferon-gamma (INFG), C-reactive protein (CRP), neopterin (NEO) and neutrophil/lymphocyte ratio (NLR) in uninfected and SARS-CoV-2-infected individuals from the STIGMA (A) and INCOV cohort (B). Statistical significance was assessed by Spearman test. Correlation coefficients are presented in bubble plots. Point sizes correspond to absolute values of correlation coefficient. Point color corresponds to the correlation coefficient value. Correlation coefficients for significant effects are highlighted in bold._
+
+\newpage
+
+```{r fig-hads-cov, fig.width = mm_inch(figs$hads_cov$w), fig.height = mm_inch(figs$hads_cov$h), fig.cap = 'Levels of neurotransmitter precursor aminoacids and their decay products in STIGMA cohort participants stratified by COVID-19 status and depression/anxiety signs.'}
+
+figs$hads_cov$plot
+
+```
+
+__Figure \@ref(fig:fig-hads-cov). Levels of neurotransmitter precursor aminoacids and their decay products in STIGMA cohort participants stratified by COVID-19 status and depression/anxiety signs.__ 
+_Serum levels of tryptophan (TRP), kynurenine (KYN), kynurenine/tryptophan ratio (KYN/TRP), phenylalanine (PHE), tyrosine (TYR) and phenylalanine/tyrosine ratio (PHE/TYR) in the STIGMA study participants stratified by SARS-CoV-2 infections status (A) and  presence of depression/anxiety signs defined as HADS $\geq$ 8 (B). Statistical significance was determined by two-tailed T test. Serum levels are shown in box plots. Points represent single observations. Significance p values are displayed in the plot captions, numbers of complete observations are indicated in the plot axes._
+
+\newpage
+
+```{r fig-multi-model, fig.width = mm_inch(figs$multi_model$w), fig.height = mm_inch(figs$multi_model$h), fig.cap = 'Results of multi-parameter modeling of aminoacid neurotransmitter precursor and their decay products.'}
+
+figs$multi_model$plot
+
+```
+
+__Figure \@ref(fig:fig-multi-model). Results of multi-parameter modeling of aminoacid neurotransmitter precursor and their decay products.__ 
+_Effects of systemic inflammation (neopterin, NEO), SARS-CoV-2 infection status, depression/anxiety signs (DPR/ANX, HADS $\geq$ 8), age and sex was investigated by multi-parameter linear regression with backward elimination of non-significant terms. Overall model validity was assessed by likelihood-ratio test (LRT). Significant model coefficient estimates with 95% confidence intervals are presented in Forest plots. LRT results (F values, degrees of freedom and p values) and total numbers of complete observations are indicated in the plot captions. Model intercepts (baseline) are indicated in the X axis titles._
+
+\newpage
+
+```{r fig-summary, fig.width = mm_inch(figs$summary$w), fig.height = mm_inch(figs$summary$h), fig.cap = 'Schematic representation of effects of inflammation, SARS-CoV-2 and depression/anxiety symptoms on indolamine and catecholamine neurotransmitter precursor metabolism.'}
+
+figs$summary$plot
+
+```
+
+__Figure \@ref(fig:fig-summary). Schematic representation of effects of inflammation, SARS-CoV-2 and depression/anxiety symptoms on indolamine and catecholamine neurotransmitter precursor metabolism.__ 
+_(A) Effects on metabolism of tryptophan (TRP), the serotonin precursor. SARS-CoV-2-dependent and -independent inflammation reduces systemic TRP levels, stimulates IDO1-mediated conversion of TRP to kynurenin (KYN) and quinolinic acid (QUIN). Independently of inflammation, during recovery from SARS-CoV-2 infection, TRP/KYN/QUIN conversion is stimulated as well. As a result, less substrate for production of the anti-depressive and anxiolytic neurotransmitter serotonin is available, which may predispose to depression or anxiety. Depression and anxiety symptoms on their own are paralleled by decrease in circulating TRP._
+
+_(B) Effects on the catecholamine neurotransmitter precursors phenylalanine (PHE) and tyrosine (TYR). SARS-CoV-2-dependent and -independent inflammation was found to inhibit PHE - TYR conversion mediated by enzymes utilizing BH4 as a co-factor. As a result, less substrate for production of dopamine TYR is available which may predispose to depression or anxiety. The PHE - TYR conversion was found to be stimulated during recovery from SARS-CoV-2 infection and by depression/anxiety symptoms, presumably as a salutary feedback mechanism._
+
+\newpage
+
+# References

@@ -1,6 +1,15 @@
-# Import of the whole-transcriptome data. The expression data
-# will be restricted to the genes with EntrezID available. Genes will be named
-# with their symbols
+# Import and wrangling of the manuscript data
+#
+# The local STIGMA cohort dataset encompasses readouts of inflammation
+# and metabolic markers of neurotransmitter precursors along with the
+# explanatory variables (anxiety/depression signs and persistent symptoms)
+# and confounders (age and sex)
+#
+# The INCOV validation dataset contains selected metabolites of the TRP decay
+# pathway (so called TRYCATS pathway) and key inflammatory cytokines measured
+# in blood of healthy individuals and COVID-19 participants at consecutive time
+# points (acute, sub-acute and recovery) after clnical onset.
+
 
 # tools --------
 
@@ -10,6 +19,7 @@
   library(trafo)
   library(stringi)
   library(readxl)
+  library(foreign)
 
   insert_head()
 
@@ -20,7 +30,8 @@
 
   insert_msg('Sourcing the import scripts')
 
-  source_all('./import scripts/incov.R',
+  source_all(c('./import scripts/local.R',
+               './import scripts/incov.R'),
              message = TRUE, crash = TRUE)
 
 # fetching the project globals ------

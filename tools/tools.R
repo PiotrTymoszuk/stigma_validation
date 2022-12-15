@@ -226,7 +226,7 @@
     ## group1 - group2, group2 - group3 etc.
 
     test <- test %>%
-      mutate(plot_cap = ifelse(p.adj > 0.1,
+      mutate(plot_cap = ifelse(p > 0.1,
                                'ns',
                                ifelse(p.adj >= 0.05,
                                       paste0('ns (p = ', signif(p.adj, 2), ')'),

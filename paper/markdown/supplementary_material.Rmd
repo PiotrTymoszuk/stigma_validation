@@ -1,5 +1,5 @@
 ---
-title: "Persisting somatic symptoms following COVID-19 as well as mental health status are associated with changes in neurotransmitter precursor amino acid levels – a psychoneuroimmunological study"
+title: "Persistent low-grade inflammation, SARS-CoV-2 infection and mental health deterioration signs impact on systemic levels of aminoacid neurotransmitter precursors"
 subtitle: "Supplementary Material"
 author: "PSY Team"
 date: "`r format(Sys.time(), '%Y-%m-%d')`"
@@ -45,29 +45,51 @@ set_flextable_defaults(font.family = 'Cambria', font.size = 10)
 
 # Supplementary Methods
 
-## External data import and transformation
+## Software
+
+Proteome and metabolome data were analyzed with R version 4.2.0. 
+General data transformation tasks were accomplished with the _tidyverse_ package bundle [@Wickham2019], _rlang_ [@Henry2022] and the development package _trafo_ (https://github.com/PiotrTymoszuk/trafo). 
+Statistical data testing was done with the packages _rstatix_ [@Kassambara2021], _ggpubr_ [@Kassambara2020] along with the development package _ExDA_ (https://github.com/PiotrTymoszuk/ExDA). 
+In linear modeling, base R functions, the development packages _lmqc_ (https://github.com/PiotrTymoszuk/lmqc) and _caretExtra_ (https://github.com/PiotrTymoszuk/caretExtra), and the package _caret_ [@Kuhn2008] were utilized.
+
+Results were visualized with tools provided by the packages _ggplot2_ [@Wickham2016], _cowplot_ [@Wilke2019] and _ExDA_. 
+Manuscript and supplementary tables were created with _flextable_ [@Gohel2022]. 
+Supplementary Material file was written in the _rmarkdown_ environment [@Allaire2022] and rendered with the _knitr_ [@Xie2022] and _bookdown_ [@Xie2016] packages.
+
+## INCOV cohort data import and transformation
 
 Proteome and metabolome data in form of normalized, age- and sex-adjusted, log~2~-transformed serum levels as well as clinical information (sex, SARS-CoV-2 infection status, COVID-19 severity, timepoint, post-COVID-19 syndrome status and particular symptoms) for the INCOV cohort were extracted from supplementary tables accompanying the report by Su and colleagues [@Su2022]. 
 
 Characteristic of the INCOV cohorts is presented in __Table 2__. 
 Numbers of available INCOV cohort samples and the sampling timepoints are shown in __Supplementary Table S\@ref(tab:tab-samples)__.
 
-## Software
+## Variable distribution and transformation
 
-Proteome and metabolome data were analyzed with R version 4.2.0. 
-General data transformation tasks were accomplished with the _tidyverse_ package bundle [@Wickham2019], _rlang_ [@Henry2022] and the development package _trafo_ (https://github.com/PiotrTymoszuk/trafo). 
-Statistical data analysis was done with the packages _rstatix_ [@Kassambara2021], _ggpubr_ [@Kassambara2020] along with the development package _ExDA_ (https://github.com/PiotrTymoszuk/ExDA).
-Results were visualized with tools provided by the packages _ggplot2_ [@Wickham2016], _cowplot_ [@Wilke2019] and _ExDA_. 
-Manuscript and supplementary tables were created with _flextable_ [@Gohel2022]. 
-Supplementary Material file was written in the _rmarkdown_ environment [@Allaire2022] and rendered with the _knitr_ [@Xie2022] and _booksdown_ [@Xie2016] packages.
+Distribution normality and variance homogeneity of normalized cytokine and metabolite serum levels was assessed by Shapiro-Wilk and Levene test, respectively. 
+The distribution testing revealed substantial deviations from normality for multiple study parameters. 
+For this reason statistical hypothesis testing in the INCOV dataset was done with non-parametric tests. 
+For STIGMA cohort metabolite and inflammation marker levels (KYN, KYN/TRP ratio, PHE, TYR and PHE/TYR ratio, NEO, CRP, IL6) used in analysis of correlation with age, comparison between participants stratified by SARS-CoV-2 infection status, anxiety/depression signs or gender as well as for linear modeling, logarithm and square root transformations was used, which improved both normality and variance homogeneity.
 
-## Statistical analysis of the cytokine and metabolite INCOV cohort data
+## Statistical hypothesis testing
 
-Distribution normality and homogeneity of normalized cytokine and metabolite serum levels was assessed by Shapiro-Wilk and Levene tests, respectively. 
-Comparison of normalized serum cytokine and metabolite levels between healthy controls and COVID-19 individuals at consecutive timepoints after symptom onset was done with Kruskal-Wallis test. 
-Differences between healthy controls and consecutive timepoints of COVID-19 were investigated with Mann-Whitney U test corrected for multiple testing with Benjamini-Hochberg method [@Benjamini1995]. 
-Correlation of serum cytokine and metabolite levels in healthy controls and COVID-19 individuals at consecutive timepoints was analyzed with Spearman test.
-For comparison of normalized serum levels of cytokines and metabolites during COVID-19 convalescence between healthy controls, COVID-19 individuals without persistent symptoms, COVID-19 individuals with persistent putative psychiatric symptoms (depression, anxiety or sleep disorders) and COVID-19 individuals with other persistent symptoms Kruskal-Wallis test with Mann-Whitney post-hoc test was employed.
+Comparison of normalized serum cytokine and metabolite levels between uninfected controls and COVID-19 individuals from the INCOV cohort at consecutive timepoints after symptom onset was done with Kruskal-Wallis test. 
+Differences between SARS-CoV-2-negative controls and consecutive timepoints of COVID-19 were investigated with Mann-Whitney post-hoc U test corrected for multiple testing with Benjamini-Hochberg method [@Benjamini1995]. 
+
+Correlation of serum cytokine and metabolite levels in uninfected controls and COVID-19 individuals at consecutive timepoints in the INCOV and STIGMA datasets was analyzed by Spearman test.
+
+Comparison of STIGMA dataset metabolite and inflammatory marker levels between participants stratified by SARS-CoV-2 infection status, anxiety/depression signs or gender was done with two-tailed T test. 
+Correlation of STIGMA dataset metabolite levels with age was assessed by Pearson test.
+
+## Multi-parameter linear regression with backwards elimination
+
+Effects of the representative inflammation marker (NEO), SARS-CoV-2 infection status, depression/anxiety signs, age and gender on systemic levels pf aminoacid neurotransmitter precursor and their decay products (TRP, KYN, KYN/TRP ratio, PHE, TYR and PHE/TYR ratio) was assessed by multi-parameter linear regression with backwards elimination. 
+
+Full models including the complete set of explanatory variables listed above were constructed (function `make_lm()`, package _lmqc_) and optimized by Akaike information criterion (AIC) driven backwards elimination of non-significant terms (method `step()`, package _lmqc_). 
+Normality and homogeneity of distribution of the model residuals was checked by Shapiro-Wilk and Levene test, respectively (method `summary(type = 'assumptions')`, package _lmqc_) and visually inspected in standard diagnostic plots of model residuals (residuals vs fitted, quantile-quantile plots, method `plot()` called for the model objects). 
+Fit stats ($R^2$ and root mean squared error [RMSE]) were retrieved from the model objects by calling `summary(type = 'fit')` (package _lmqc_). 
+Validity of the optimized models was determined by likelihood-ratio test (LRT) versus the respective null models (method `anova()`). 
+Reproducibility of the optimized multi-parameter models was investigated by repeated cross-validation (50 repeats, 10 folds, function `train(method = 'lm')`, package _caret_) and by comparison of the RMSE and $R^2$ statistics obtained with in the training dataset and in cross-validation (method `summary()`, package _caretExtra_). 
+As presented in __Supplementary Figure S\@ref(fig:fig-fit-stats)A__, similar values of error fit in the training and cross-validation data suggest good reproducibility of the optimized models and lack of over-parameterization.
 
 ## Data and code availability
 
@@ -94,25 +116,58 @@ flextable::flextable(suppl_tabs$samples) %>%
 
 # Supplementary Figures
 
-```{r fig-incov-neuro-cyto, fig.width = mm_inch(suppl$incov_neuro_cyto$w), fig.height = mm_inch(suppl$incov_neuro_cyto$h), fig.cap = 'Serum levels of cytokines in healthy controls, complete COVID-19 recovery, non-neurological and neurological persistent symptoms in the INCOV cohort.'}
+```{r fig-incov-neuro-tc, fig.width = mm_inch(suppl$incov_infl_tc$w), fig.height = mm_inch(suppl$incov_infl_tc$h), fig.cap = 'Serum levels of inflammatory cytokines in course of COVID-19 and recovery.'}
 
-suppl$incov_neuro_cyto$plot
+suppl$incov_infl_tc$plot
 
 ```
 
-__Figure \@ref(fig:fig-incov-neuro-cyto). Serum levels of cytokines in healthy controls, complete COVID-19 recovery, non-neurological and neurological persistent symptoms in the INCOV cohort.__ 
-_Normalized serum levels of IL6, IL10, TNF-alpha (TNF), IFN-gamma (IFNG) were extracted from the INCOV study data for healthy controls and COVID-19 participants during convalescence (median: 64 days after symptom onset). The serum levels were compared between healthy controls, COVID-19 subjects without persistent symptoms, COVID-19 subjects with putative neurological persistent symptoms (self-reported neurological symptoms, blurry vision, dizziness, feet or hand pain, smell or taste disorders) and COVID-19 subjects with other non-neurological persistent symptoms with Kruskal-Wallis test. Pairwise comparisons between the groups were done with Benjamini-Hochberg-corrected Mann-Whitney post-hoc test. Each point in the plots represent a single sample, boxes depict medians with interquartile ranges (IQR), whiskers span over 150% IQR. Kruskal-Wallis test p values are displayed in the plot captions. Significant and near-significant (p < 0.1) post-hoc test results are indicated in the plots. Numbers of complete observations are shown below the plots._
+__Supplementary Figure S\@ref(fig:fig-incov-neuro-tc). Serum levels of inflammatory cytokines in course of COVID-19 and recovery.__ 
+_Serum levels of interleukin 6 (IL6), interleukin 10 (IL10), tumor necrosis factor alpha (TNF) and interferon-gamma (IFN) in serum of uninfected controls and COVID-19 individuals during acute, sub-acute and recovery phase of the disease in the INCOV cohort. Statistical significance was determined by Kruskal-Wallis test with Benjamini-Hochberg-corrected Mann-Whitney U test. Normalized serum level concentrations are presented in box plots. Points represent single samples. The Kruskal-Wallis test results are indicated in the plot captions. Results of the post-hoc tests are indicated in the plots. Numbers of complete observations are displayed under the plots. _
 
 \newpage
 
-```{r fig-incov-neuro-trp, fig.width = mm_inch(suppl$incov_neuro_trp$w), fig.height = mm_inch(suppl$incov_neuro_trp$h), fig.cap = 'Serum levels of TRP degradation products in healthy controls, complete COVID-19 recovery, non-neurological and neurological persistent symptoms in the INCOV cohort.'}
+```{r fig-hads-cov, fig.width = mm_inch(suppl$hads_cov$w), fig.height = mm_inch(suppl$hads_cov$h), fig.cap = 'Levels of inflammatory markers in STIGMA cohort participants stratified by COVID-19 status and depression/anxiety signs.'}
 
-suppl$incov_neuro_trp$plot
+suppl$hads_cov$plot
 
 ```
 
-__Figure \@ref(fig:fig-incov-neuro-trp). Serum levels of TRP degradation products in healthy controls, complete COVID-19 recovery, non-neurological and neurological persistent symptoms in the INCOV cohort.__ 
-_Normalized serum levels of tryptophan (TRP), serotonin (5-HT), kynurenine (KYN) and quinolinic acid (QUIN) were extracted from the INCOV study data for healthy controls and COVID-19 participants during convalescence (median: 64 days after symptom onset). The serum levels were compared between healthy controls, COVID-19 subjects without persistent symptoms, COVID-19 subjects with putative neurological persistent symptoms (self-reported neurological symptoms, blurry vision, dizziness, feet or hand pain, smell or taste disorders) and COVID-19 subjects with other non-neurological persistent symptoms with Kruskal-Wallis test. Pairwise comparisons between the groups were done with Benjamini-Hochberg-corrected Mann-Whitney post-hoc test. Each point in the plots represent a single sample, boxes depict medians with interquartile ranges (IQR), whiskers span over 150% IQR. Kruskal-Wallis test p values are displayed in the plot captions. Significant and near-significant (p < 0.1) post-hoc test results are indicated in the plots. Numbers of complete observations are shown below the plots._
+__Supplementary Figure S\@ref(fig:fig-hads-cov). Levels of inflammatory markers in STIGMA cohort participants stratified by COVID-19 status and depression/anxiety signs.__ 
+_Serum levels of interleukin 6 (IL6), C-reactive protein (CRP), neopterin (NEO) and neutrophil-leukocyte ratio (NLR) in the STIGMA study participants stratified by SARS-CoV-2 infections status (A) and  presence of depression/anxiety signs defined as HADS $\geq$ 8 (B). Statistical significance was determined by two-tailed T test. Serum levels are shown in box plots. Points represent single observations. Significance p values are displayed in the plot captions, numbers of complete observations are indicated in the plot axes._
+
+\newpage
+
+```{r fig-age, fig.width = mm_inch(suppl$age$w), fig.height = mm_inch(suppl$age$h), fig.cap = 'Correlation of aminoacid neurotransmitter precursors and their decay products with age.'}
+
+suppl$age$plot
+
+```
+
+__Supplementary Figure S\@ref(fig:fig-age). Correlation of aminoacid neurotransmitter precursors and their decay products with age.__ 
+_Correlation of tryptophan (TRP), kynurenine (KYN), kynurenine/tryptophan ratio (KYN/TRP), phenylalanine (PHE), tyrosine (TYR) and phenylalanine/tyrosine ratio (PHE/TRP) with age in the STIGMA cohort was investigated by Pearson test. Points represent single observations, blue lines with gray ribbons depict fitted linear trends with 95% confidence intervals. Values of correlation coefficients with 95% confidence intervals, significance and numbers of complete observations are indicated in the plot captions._
+
+\newpage
+
+```{r fig-gender, fig.width = mm_inch(suppl$gender$w), fig.height = mm_inch(suppl$gender$h), fig.cap = 'Levels of aminoacid neurotransmitter precursors and their decay products in females and males.'}
+
+suppl$gender$plot
+
+```
+
+__Supplementary Figure S\@ref(fig:fig-gender). Levels of aminoacid neurotransmitter precursors and their decay products in females and males.__ 
+_Serum concentrations of tryptophan (TRP), kynurenine (KYN), kynurenine/tryptophan ratio (KYN/TRP), phenylalanine (PHE), tyrosine (TYR) and phenylalanine/tyrosine ratio (PHE/TRP) in female and male participants of the STIGMA study. Statistical significance was assessed by two-tailed T test. Serum levels are shown in box plots. Points represent single observations. Significance p values are displayed in the plot captions. Numbers of complete observation are indicated under the plots._
+
+\newpage
+
+```{r fig-fit-stats, fig.width = mm_inch(suppl$fit_stats$w), fig.height = mm_inch(suppl$fit_stats$h), fig.cap = 'Root mean square error and R-squared statistics for multi-parameter linear models of aminoacid neurotransmitter precursors and their decay products in the STIGMA cohort'}
+
+suppl$fit_stats$plot
+
+```
+
+__Supplementary Figure S\@ref(fig:fig-fit-stats). Root mean square error and R-squared statistics for multi-parameter linear models of aminoacid neurotransmitter precursors and their decay products in the STIGMA cohort.__ 
+_Multi-parameter linear regression models of serum levels of tryptophan (TRP), kynurenine (KYN), kynurenine/tryptophan ratio (KYN/TRP), phenylalanine (PHE), tyrosine (TYR) and phenylalanine/tyrosine ratio (PHE/TRP) in the STIGMA models were optimized by backwards elimination and their reproducibility was tested by repeated cross-validation (CV, 50 repeats, 10 folds). Values of root mean square error (RMSE, A) and $R^2$ (B) in the training data set and CV are plotted. Note pseudo-logarithmic scale in (A)._
 
 \newpage
 

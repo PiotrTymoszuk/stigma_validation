@@ -61,8 +61,12 @@
 
   insert_msg('Reading the clinical data for CoV patients')
 
-  incov$clinic$cov <- read_excel('./data/INCOV/Table S1.xlsx',
-                                 sheet = 'S1.1 INCOV') %>%
+  ## warnings concern coercion during reading from Excel
+  ## and do not affect the data
+
+  incov$clinic$cov <-
+    suppressWarnings(read_excel('./data/INCOV/Table S1.xlsx',
+                                sheet = 'S1.1 INCOV')) %>%
     transmute(patient_id = `Study subject ID`,
               sample_id = `Blood draw`,
               timepoint = stri_extract(sample_id, regex = 'T\\d{1}$'),
@@ -183,8 +187,9 @@
 
   insert_msg('Healthy participant information')
 
-  incov$clinic$healthy <- read_excel('./data/INCOV/Table S1.xlsx',
-                                     sheet = 'S1.2 Healthy control') %>%
+  incov$clinic$healthy <-
+    read_excel('./data/INCOV/Table S1.xlsx',
+               sheet = 'S1.2 Healthy control') %>%
     transmute(patient_id = `Study Subject ID`,
               sample_id = patient_id,
               timepoint = 'healthy',
