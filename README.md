@@ -30,11 +30,11 @@ source('exec.R')
 
 ```
 
-### Reference
+## Reference
 
 To be provided
 
-### Contact
+## Contact
 
 The maintainer odf the repository is [Piotr Tymoszuk](mailto:piotr.s.tymoszuk@gmail.com). Data requests should be addressed to the corresponding author of the study [Prof. Katharina Hüfner](mailto:Katharina.Huefner@i-med.ac.at).
 
