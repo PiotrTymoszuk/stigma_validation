@@ -39,31 +39,26 @@
               w = 180,
               h = 150)
 
-# Figure S2: inflammatory parameters in CoV and depression/anxiety -------
+# Figure S2: inflammatory parameters in CoV recovery -------
 
-  insert_msg('Figure S2: inflammatory parameters in CoV and depr/anx, STIGMA')
+  insert_msg('Figure S2: inflammatory parameters in CoV recovery, STIGMA')
 
-  suppl$hads_cov <- hads_cov$plots[c('cov', 'hads')] %>%
-    map(~.x[c('il6', 'crp', 'neo', 'nlr')]) %>%
-    map(~c(.x, list(ggdraw()), list(ggdraw()))) %>%
-    unlist(recursive = FALSE) %>%
+  suppl$hads_cov <-
+    c(hads_cov$plots$cov[c('il6', 'crp', 'neo', 'nlr')],
+      list(ggdraw()), list(ggdraw())) %>%
     map(~.x +
           theme(plot.tag = element_blank(),
                 legend.position = 'none')) %>%
     plot_grid(plotlist = .,
               ncol = 3,
-              align = 'hv',
-              labels = c('A', '', '',
-                         '', '', '',
-                         'B', '', ''),
-              label_size = 10) %>%
+              align = 'hv') %>%
     as_figure(label = 'figure_s2_hads_covid',
               ref_name = 'hads_cov',
-              caption = paste('Levels of inflammatory markers',
-                              'in STIGMA cohort participants stratified by',
-                              'COVID-19 status and depression/anxiety signs.'),
+              caption = paste('Association of inflammatory markers',
+                              'with SARS-CoV-2 infection convalescence',
+                              'in the SIMMUN cohort'),
               w = 180,
-              h = 220)
+              h = 120)
 
 # Figure S3: correlations with age, STIGMA ------
 
@@ -74,7 +69,7 @@
                                  'log_kyn_trp',
                                  'log_phe',
                                  'log_tyr',
-                                 'log_phe_tyr')] %>%
+                                 'sqrt_phe_tyr')] %>%
     plot_grid(plotlist = .,
               ncol = 2,
               align = 'hv') %>%
@@ -94,7 +89,7 @@
                                  'log_kyn_trp',
                                  'log_phe',
                                  'log_tyr',
-                                 'log_phe_tyr')] %>%
+                                 'sqrt_phe_tyr')] %>%
     map(~.x + theme(legend.position = 'none')) %>%
     plot_grid(plotlist = .,
               ncol = 3,
@@ -105,7 +100,7 @@
                               'precursors and their decay products',
                               'in females and males.'),
               w = 180,
-              h = 150)
+              h = 120)
 
 # Figure S5: error and R-squared, multiple linear regression ------
 

@@ -1,4 +1,4 @@
-# Imports data for the local cohort
+
 
   insert_head()
 
@@ -12,7 +12,11 @@
 
   ## raw data for the selected variables
 
-  stigma$raw <- read.spss('./data/local/01.06.2022.sav', to.data.frame = TRUE)
+  stigma$raw <- read.spss('./data/local/01.06.2022.sav',
+                          to.data.frame = TRUE)
+
+  stigma$stress <- read.spss('./data/local/27.10.2021.sav',
+                             to.data.frame = TRUE)
 
 # Wrangling, NA handling calculation of the ratios ------
 
@@ -20,6 +24,63 @@
 
   ## NA handling: participants with missing explanatory factors and confounders
   ## are excluded
+
+  ## stress, depression and persistent somatic symptoms
+
+  stigma$stress <- stigma$stress %>%
+    as_tibble %>%
+    transmute(patient_id = stri_replace(studien_id,
+                                        regex = '\\s+$',
+                                        replacement = ''),
+              phq_dpr_score = phq_results,
+              log_phq_dpr_score = log(phq_dpr_score + 1),
+              sqrt_phq_dpr_score = sqrt(phq_dpr_score),
+              pss_stress_score = pss_4_results,
+              log_pss_stress_score = log(pss_stress_score + 1),
+              sqrt_pss_stress_score = sqrt(pss_stress_score),
+              ## extraction of the A1 SCI items of persistent somatic symptoms
+              pss_sleep_problems = a1_sci_1_0_item_001,
+              pss_gastrointestinal = a1_sci_1_0_item_002,
+              pss_lump_throat = a1_sci_1_0_item_003,
+              pss_headache = a1_sci_1_0_item_004,
+              pss_sorrow = a1_sci_1_0_item_006,
+              pss_motivation_loss = a1_sci_1_0_item_007,
+              pss_libido_loss = a1_sci_1_0_item_009,
+              pss_ticks = a1_sci_1_0_item_011,
+              pss_concentration_problems = a1_sci_1_0_item_012)
+
+  ## recoding the PSS:: 3 and more in a 4 scale indicates a symptom
+  ## calculating the PSS summ
+
+  stigma$pss <- c('pss_sleep_problems',
+                  'pss_gastrointestinal',
+                  'pss_lump_throat',
+                  'pss_headache',
+                  'pss_sorrow',
+                  'pss_motivation_loss',
+                  'pss_libido_loss',
+                  'pss_ticks',
+                  'pss_concentration_problems')
+
+  for(i in stigma$pss) {
+
+    stigma$stress <- stigma$stress %>%
+      mutate(!!i := as.numeric(.data[[i]]),
+             !!i := ifelse(.data[[i]] >= 3, 'yes', 'no'),
+             !!i := factor(.data[[i]], c('no', 'yes')))
+
+  }
+
+  stigma$stress$pss_sum <- stigma$stress[stigma$pss] %>%
+    map(~as.numeric(.x) - 1) %>%
+    reduce(`+`)
+
+  stigma$stress <- stigma$stress %>%
+    mutate(pss = ifelse(pss_sum > 0, 'PSS+', 'PSS-'),
+           pss = factor(pss, c('PSS-', 'PSS+')))
+
+  ## inflammation , neurotransmitter precursors, demography, CoV
+  ## antibodies
 
   stigma$data <- stigma$raw %>%
     as_tibble %>%
@@ -42,9 +103,6 @@
                                     hads_dpr_score >= 8,
                                   'HADS+', 'HADS-'),
               hads_signs = factor(hads_signs, c('HADS-', 'HADS+')),
-              pss = car::recode(persistierende_symptome_2,
-                                "'keine oder covid neg' = 'PSS-';
-                                'persistierende Symptome' = 'PSS+'"),
               cov = car::recode(covid_real,
                                 "'COVID pos' = 'SARS-CoV-2';
                                 'COVID neg' = 'healthy'"),
@@ -119,7 +177,10 @@
               sqrt_no = sqrt(no),
               neutro = Segmentkernige_Neutrophile,
               log_neutro = log(neutro),
-              sqrt_neutro = sqrt(neutro))
+              sqrt_neutro = sqrt(neutro),
+              anti_rbd = RBDpanIgIndex,
+              log_anti_rbd = log(anti_rbd),
+              sqrt_anti_rbd = sqrt(anti_rbd))
 
   stigma$data <- stigma$data %>%
     filter(!is.na(hads_signs),
@@ -127,11 +188,24 @@
            !is.na(age),
            !is.na(sex))
 
-# Adding the manually extracted free text information on persisting symptoms --------
+  stigma$data <- left_join(stigma$data,
+                           stigma$stress,
+                           by = 'patient_id')
 
-  insert_msg('Persisting symptom information')
+  ## restricting the data to the complete modeling information
 
-  stigma$pers_symptoms <-
+  for(i in globals$stigma_lexicon$variable) {
+
+    stigma$data <- stigma$data %>%
+      filter(!is.na(.data[[i]]))
+
+  }
+
+# Manually extracted free text information on persisting symptoms --------
+
+  insert_msg('COVID-19-related Persisting symptom information, self-reported')
+
+  stigma$pers_cov_symptoms <-
     read_tsv('./data/local/persistent_symptoms_text.tsv') %>%
     transmute(patient_id = stri_replace(studien_id,
                                      regex = '\\s+$',
@@ -144,64 +218,10 @@
               cogn_long_cov = neurocognitive,
               long_cov = ifelse(is.na(symptom_text), 'no', 'yes'))
 
-  stigma$data <- left_join(stigma$data,
-                           stigma$pers_symptoms[c('patient_id',
-                                                  'psy_long_cov',
-                                                  'neuro_long_cov',
-                                                  'fatigue_long_cov',
-                                                  'resp_long_cov',
-                                                  'cogn_long_cov',
-                                                  'long_cov')],
-                           by = 'patient_id')
-
-# Restricting the persistent symptom indexes to the Covid-19 individuals only -----
-
-  insert_msg('Persistent symptoms only for COVID-19')
-
-  ## as defined by the 'covid_status' variable
-
-  stigma$data <- stigma$data %>%
-    mutate(long_cov = ifelse(cov == 'healthy',
-                             'healthy',
-                             ifelse(long_cov == 'yes',
-                                    'yes', 'no')),
-           long_cov = factor(long_cov, c('healthy', 'no', 'yes')),
-           psy_long_cov = ifelse(cov == 'healthy',
-                                 'healthy',
-                                 ifelse(long_cov == 'no',
-                                        'recovered',
-                                        psy_long_cov)),
-           psy_long_cov = factor(psy_long_cov,
-                                 c('healthy', 'recovered', 'no', 'yes')),
-           neuro_long_cov = ifelse(cov == 'healthy',
-                                   'healthy',
-                                   ifelse(long_cov == 'no',
-                                          'recovered',
-                                          neuro_long_cov)),
-           neuro_long_cov = factor(neuro_long_cov,
-                                   c('healthy', 'recovered', 'no', 'yes')),
-           fatigue_long_cov = ifelse(cov == 'healthy',
-                                     'healthy',
-                                     ifelse(long_cov == 'no',
-                                            'recovered',
-                                            fatigue_long_cov)),
-           fatigue_long_cov = factor(fatigue_long_cov,
-                                     c('healthy', 'recovered', 'no', 'yes')),
-           resp_long_cov = ifelse(cov == 'healthy',
-                                  'healthy',
-                                  ifelse(long_cov == 'no',
-                                         'recovered',
-                                         resp_long_cov)),
-           resp_long_cov = factor(resp_long_cov,
-                                  c('healthy', 'recovered', 'no', 'yes')),
-           cogn_long_cov = ifelse(cov == 'healthy',
-                                  'healthy',
-                                  ifelse(long_cov == 'no',
-                                         'recovered',
-                                         cogn_long_cov)),
-           cogn_long_cov = factor(cogn_long_cov,
-                                  c('healthy', 'recovered', 'no', 'yes')))
-
 # END ------
+
+  stigma <- stigma[c('data', 'pss', 'pers_cov_symptoms')]
+
+  rm(i)
 
   insert_tail()

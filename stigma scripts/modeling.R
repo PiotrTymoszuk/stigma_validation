@@ -4,8 +4,10 @@
 #
 # Explanatory variables are: neopterin as a representative inflammatory marker,
 # signs of depression/anxiety as defined by HADS, CoV status, age
-# (it correlates with multiple metabolite levels) and gender
-# (correlation with some parameters)
+# (it correlates with multiple metabolite levels), gender
+# (correlation with some parameters) and stress scoring by PSS-4.
+# Additionally, anti-RBD antibodies are included in the explanatory variable
+# set as a measure of immune response strength
 
   insert_head()
 
@@ -35,18 +37,28 @@
   ## explanatory variables and their labels to be presented in the plots
 
   stigma_lm$variables <-
-    c('hads_signs', 'infection', 'log_neo', 'age', 'sex')
+    c('infection',
+      'log_neo',
+      'age',
+      'sex',
+      'log_anti_rbd',
+      'pss_stress_score',
+      'hads_anx_score',
+      'hads_dpr_score')
 
   stigma_lm$var_labs <-
-    c('hads_signs' = 'DPR/ANX',
-      'infection' = 'SARS-CoV-2',
+    c('infection' = 'SARS-CoV-2',
       'log_neo' = 'log NEO, nmol/L',
       'age' = 'Age, per decade',
-      'sex' = 'Sex')
+      'sex' = 'Sex',
+      'log_anti_rbd' = 'log anti-RBD IgG',
+      'pss_stress_score' = 'Stress, PSS-4',
+      'hads_anx_score' = 'Anxiety, HADS',
+      'hads_dpr_score' = 'Depression, HADS')
 
   ## analysis tables with each of the responses, explanatory variables
   ## and complete cases only. NEO transformed with log to improve EOV
-  ## and normality. Scaling age to decades.
+  ## and normality. Normalization of numeric variables
   ## Re-coding the infection status as CoV recovery
 
   stigma_lm$analysis_tbl <- stigma$data %>%
@@ -59,8 +71,7 @@
   stigma_lm$analysis_tbl <- stigma_lm$responses %>%
     map(~stigma_lm$analysis_tbl[c('patient_id', .x, stigma_lm$variables)]) %>%
     map(~filter(.x, complete.cases(.x))) %>%
-    map(mutate,
-        age = age/10) %>%
+    map(~map_dfr(.x, function(x) if(is.numeric(x)) scale(x)[, 1] else x)) %>%
     map(column_to_rownames, 'patient_id')
 
   ## full and null model formulas
@@ -101,7 +112,10 @@
   insert_msg('Backwards elimination')
 
   stigma_lm$step_models <- stigma_lm$full_models %>%
-    map(step, step_fun = MASS::stepAIC, direction = 'backward')
+    map(step,
+        step_fun = MASS::stepAIC,
+        direction = 'backward',
+        k = floor(log(nrow(stigma$data))))
 
 # Checking assumptions of the optimized models -----
 
@@ -150,7 +164,8 @@
            plot_cap = paste0('F(', abs(Df), ', ',
                              Res.Df, ') = ', signif(`F`, 2)),
            plot_cap = paste(plot_cap, significance, sep = ', '),
-           plot_cap = paste(plot_cap, Res.Df + 1, sep = ', n = ')) %>%
+           plot_cap = paste(plot_cap, Res.Df + 1, sep = ', n = '),
+           plot_cap = set_names(plot_cap, response)) %>%
     as_tibble
 
 # Fit goodness and errors ------
@@ -165,6 +180,8 @@
 
   insert_msg('Cross-validation')
 
+  ## working with safely, since there's no detectable model for PHE
+
   stigma_lm$step_formulas <- stigma_lm$step_models %>%
     map(formula)
 
@@ -175,23 +192,25 @@
   stigma_lm$caret_models <-
     map2(stigma_lm$step_formulas,
          stigma_lm$analysis_tbl,
-         ~train(form = .x,
-                data = .y,
-                method = 'lm',
-                metric = 'RMSE',
-                trControl = trainControl(method = 'repeatedcv',
-                                         number = 10,
-                                         repeats = 50,
-                                         savePredictions = 'final',
-                                         returnData = TRUE,
-                                         returnResamp = 'final')))
+         ~safely(train)(form = .x,
+                        data = .y,
+                        method = 'lm',
+                        metric = 'RMSE',
+                        trControl = trainControl(method = 'repeatedcv',
+                                                 number = 10,
+                                                 repeats = 50,
+                                                 savePredictions = 'final',
+                                                 returnData = TRUE,
+                                                 returnResamp = 'final')))
 
   stopImplicitCluster()
 
   stigma_lm$caret_models <- stigma_lm$caret_models %>%
+    map(~.x$result) %>%
+    compact %>%
     map(as_caretx)
 
-# cross validation errors and R-squared ------
+# Cross validation errors and R-squared ------
 
   insert_msg('Cross-validation fit stats')
 
@@ -218,7 +237,7 @@
 
   stigma_lm$fit_stat_plots[c('RMSE', 'rsq')] <-
     list(data = dlply(stigma_lm$cv_stats, 'statistic'),
-         title = c('Fit error, STIGMA', 'Explained variance, STIGMA'),
+         title = c('Fit error, SIMMUN', 'Explained variance, SIMMUN'),
          x_lab = list('RMSE', expression('R'^2))) %>%
     pmap(function(data, title, x_lab) data %>%
            ggplot(aes(x = estimate,
@@ -232,8 +251,8 @@
             #         color = 'white',
              #        hjust = 1.3,
               #       position = position_dodge(0.9)) +
-           scale_y_discrete(limits = rev(names(stigma_lm$responses)),
-                            labels = exchange(names(stigma_lm$responses),
+           scale_y_discrete(limits = rev(names(stigma_lm$caret_models)),
+                            labels = exchange(names(stigma_lm$caret_models),
                                               dict = globals$stigma_lexicon,
                                               key = 'variable',
                                               value = 'label')) +
@@ -256,7 +275,9 @@
   ## model estimates
 
   stigma_lm$inference <- stigma_lm$step_models %>%
-    map(summary, type = 'inference') %>%
+    map(safely(summary), type = 'inference') %>%
+    map(~.x$result) %>%
+    compact %>%
     map(mutate,
         var_lab = stigma_lm$var_labs[variable],
         level = ifelse(level == 'CoV recovery', '', level))
@@ -267,16 +288,16 @@
   stigma_lm$forest_plots <-
     list(x = stigma_lm$inference %>%
            map(filter, p_value < 0.05),
-         plot_title = exchange(stigma_lm$responses,
+         plot_title = exchange(stigma_lm$responses[names(stigma_lm$inference)],
                                dict = globals$stigma_lexicon,
                                key = 'variable',
                                value = 'base_label') %>%
-           paste('STIGMA', sep = ', '),
-         x_lab = exchange(stigma_lm$responses,
+           paste('SIMMUN', sep = ', '),
+         x_lab = exchange(stigma_lm$responses[names(stigma_lm$inference)],
                           dict = globals$stigma_lexicon,
                           key = 'variable',
                           value = 'axis_label'),
-         plot_subtitle = stigma_lm$lrt_summary$plot_cap) %>%
+         plot_subtitle = stigma_lm$lrt_summary$plot_cap[names(stigma_lm$inference)]) %>%
     pmap(safely(plot_forest),
          variable = 'var_lab',
          hide_baseline = TRUE,

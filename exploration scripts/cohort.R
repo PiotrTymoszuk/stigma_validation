@@ -23,44 +23,27 @@
       hads_anx_score = 'HADS anxiety score',
       hads_dpr_score = 'HADS depression score',
       hads_signs = 'Depression or anxiety signs, HADS \u2265 8',
+      pss_stress_score = 'PSS-4 stress score',
       cov = 'Infection',
+      anti_rbd = 'anti-RBD SARS-CoV-2, IgG, AU',
       severity = 'COVID-19 severity',
-      long_cov = 'post-COVID-19 syndrome',
-      psy_long_cov = 'Persistent depression, anxiety or sleep disorders',
-      cogn_long_cov = 'Persistent memory or concentration problems',
-      neuro_long_cov = 'Persistent neurological symptoms or smell/taste disorders',
-      fatigue_long_cov = 'Persistent fatigue or physical performance loss',
-      resp_long_cov = 'Persistent cough, shortness of breath or other respiratory symptoms',
-      gastro_long_cov = 'Persistent gastrointestinal symptoms') %>%
+      pss = 'Persistent somatic symptoms',
+      pss_sleep_problems = 'Sleep problems',
+      pss_gastrointestinal = 'Stomach/abdomen pain',
+      pss_lump_throat = 'Lump in the throat',
+      pss_headache = 'Headache',
+      pss_sorrow = 'Sorrow, low mood',
+      pss_motivation_loss = 'Motivation loss/fatigue',
+      pss_libido_loss = 'Loss of libido',
+      pss_ticks = 'Uncontrolled ticks',
+      pss_concentration_problems = 'Concentration problems') %>%
     compress(names_to = 'variable',
              values_to = 'label')
 
   ## analysis tables: STIGMA
 
   cohort$analysis_tbl$stigma <- stigma$data %>%
-    mutate(long_cov = ifelse(long_cov == 'healthy',
-                             'no', as.character(long_cov)),
-           long_cov = factor(long_cov),
-           psy_long_cov = ifelse(psy_long_cov %in% c('healthy',
-                                                     'recovered'),
-                                 'no', as.character(psy_long_cov)),
-           psy_long_cov = factor(psy_long_cov),
-           neuro_long_cov = ifelse(neuro_long_cov %in% c('healthy',
-                                                         'recovered'),
-                                   'no', as.character(neuro_long_cov)),
-           neuro_long_cov = factor(neuro_long_cov),
-           cogn_long_cov = ifelse(cogn_long_cov %in% c('healthy',
-                                                       'recovered'),
-                                  'no', as.character(cogn_long_cov)),
-           cogn_long_cov = factor(cogn_long_cov),
-           fatigue_long_cov = ifelse(fatigue_long_cov %in% c('healthy',
-                                                             'recovered'),
-                                     'no', as.character(fatigue_long_cov)),
-           fatigue_long_cov = factor(fatigue_long_cov),
-           resp_long_cov = ifelse(resp_long_cov %in% c('healthy',
-                                                       'recovered'),
-                                  'no', as.character(resp_long_cov)),
-           resp_long_cov = factor(resp_long_cov))
+    select(cov, any_of(cohort$var_lexicon$variable))
 
   ## analysis tables: INCOV
 
@@ -170,7 +153,11 @@
                             replacement = ''),
         test = stri_replace(test,
                             fixed = 'Chi-squared',
-                            replacement = '\u03C7\u00B2'))
+                            replacement = '\u03C7\u00B2')) %>%
+    map(~map_dfc(.x,
+                 stri_replace_all,
+                 regex = 'PSS\\-.*\\nPSS\\+:\\s{1}',
+                 replacement = ''))
 
   cohort$feat_tables <- cohort$feat_tables %>%
     map(~map_dfc(.x,

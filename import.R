@@ -23,8 +23,9 @@
 
   insert_head()
 
-  source_all('./tools/tools.R',
-             message = TRUE, crash = TRUE)
+  c('./tools/globals.R',
+    './tools/tools.R') %>%
+    source_all(message = TRUE, crash = TRUE)
 
 # Sourcing the import scripts for single studies ------
 
@@ -34,12 +35,15 @@
                './import scripts/incov.R'),
              message = TRUE, crash = TRUE)
 
-# fetching the project globals ------
+# Updating the project globals ------
 
   insert_msg('Project globals')
 
-  source_all('./tools/globals.R',
-             message = TRUE, crash = TRUE)
+  globals$incov_lexicon <-
+    rbind(incov$annotation_proteome %>%
+            filter(variable %in% globals$incov_proteins),
+          incov$annotation_metabolome %>%
+            filter(variable %in% globals$incov_metabolites))
 
 # END -----
 

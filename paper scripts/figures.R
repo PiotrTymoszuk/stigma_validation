@@ -93,44 +93,101 @@
               w = 180,
               h = 220)
 
-# Figure 3: regulation of precursors of by CoV and HADS ----
+# Figure 3: regulation of precursors of by CoV and humoral immunity ----
 
-  insert_msg('Figure 3: neurotransmitter precursors by CoV and HADS')
+  insert_msg('Figure 3: neurotransmitter precursors by CoV status and IgG')
 
-  figs$hads_cov <- hads_cov$plots[c('cov', 'hads')] %>%
-    map(~.x[c('trp', 'kyn', 'kyn_trp',
-              'phe', 'tyr', 'phe_tyr')]) %>%
-    unlist(recursive = FALSE) %>%
+  ## top panel: effects of CoV
+
+  figs$cov$upper_panel <-
+    hads_cov$plots$cov[c('trp', 'kyn', 'kyn_trp',
+                         'phe', 'tyr', 'phe_tyr')] %>%
     map(~.x +
           theme(plot.tag = element_blank(),
                 legend.position = 'none')) %>%
     plot_grid(plotlist = .,
               ncol = 3,
-              align = 'hv',
-              labels = c('A', '', '',
-                         '', '', '',
-                         'B', '', ''),
-              label_size = 10) %>%
-    as_figure(label = 'figure_3_hads_covid',
-              ref_name = 'hads_cov',
-              caption = paste('Levels of neurotransmitter precursor',
-                              'aminoacids and their decay products in',
-                              'STIGMA cohort participants stratified by',
-                              'COVID-19 status and depression/anxiety signs.'),
+              align = 'hv')
+
+  ## bottom panel: effects of anti-RBD IgG
+
+  figs$cov$bottom_panel <-
+    rbd$plots$cov[c('trp', 'kyn', 'kyn_trp',
+                    'phe', 'tyr', 'phe_tyr')] %>%
+    map(~.x +
+          labs(subtitle = .x$labels$subtitle %>%
+                 stri_replace(fixed = '\u03C1 = ',
+                              replacement = '') %>%
+                 stri_replace(regex = ',\\s{1}n\\s{1}=.*$',
+                              replacement = ''))) %>%
+    plot_grid(plotlist = .,
+              ncol = 3,
+              align = 'hv')
+
+  ## the entire figure
+
+  figs$cov <- plot_grid(figs$cov$upper_panel,
+                        figs$cov$bottom_panel,
+                        nrow = 2,
+                        labels = LETTERS,
+                        label_size = 10) %>%
+    as_figure(label = 'figure_3_covid',
+              ref_name = 'cov',
+              caption = paste('Association of neurotransmitter precursor',
+                              'aminoacids and their decay products',
+                              'with SARS-CoV-2 infection and anti-SARS-CoV-2',
+                              'antibody response in the SIMMUN cohort.'),
               w = 180,
-              h = 220)
+              h = 230)
 
-# Figure 4: multi-variate modeling of metabolite levels, STIGMA -----
+# Figure 4: Mental health and metabolites ------
 
-  insert_msg('Figure 4: multi-parameter modeling of the metabolite levels')
+  insert_msg('Figure 4: Mental health scoring and metabolites')
+
+  figs$pss <-
+    plot_grid(mental$bubble_plot +
+                scale_x_discrete(limits = c('hads_anx_score',
+                                            'hads_dpr_score',
+                                            'pss_stress_score'),
+                                 labels = c('hads_anx_score',
+                                            'hads_dpr_score',
+                                            'pss_stress_score') %>%
+                                   exchange(dict = globals$stigma_lexicon,
+                                            key = 'variable',
+                                            value = 'label')) +
+                scale_y_discrete(limits = c('trp', 'kyn', 'kyn_trp',
+                                            'phe', 'tyr', 'phe_tyr'),
+                                 labels = c('trp', 'kyn', 'kyn_trp',
+                                            'phe', 'tyr', 'phe_tyr') %>%
+                                   exchange(dict = globals$stigma_lexicon,
+                                            key = 'variable',
+                                            value = 'label')),
+              ncol = 2,
+              rel_widths = c(0.85, 0.15)) %>%
+    as_figure(label = 'figure_4_pss',
+              ref_name = 'pss',
+              caption = paste('Association of neurotransmitter precursor',
+                              'aminoacids and their decay products',
+                              'with anxiety, depression and stress scoring',
+                              'in the SIMMUN cohort.'),
+              w = 180,
+              h = 100)
+
+# Figure 5: multi-variate modeling of metabolite levels, STIGMA -----
+
+  insert_msg('Figure 5: multi-parameter modeling of the metabolite levels')
 
   figs$multi_model <- stigma_lm$forest_plots[c('trp', 'kyn', 'kyn_trp',
                                                'tyr', 'phe_tyr')] %>%
-    map(~.x + theme(legend.position = 'none'))
+    map(~.x +
+          theme(legend.position = 'none') +
+          scale_y_discrete(labels = function(x) stri_replace(x,
+                                                             fixed = 'SARS-CoV-2',
+                                                             replacement = 'CoV')))
 
   figs$multi_model[c('kyn_trp', 'tyr', 'phe_tyr')] <-
     map2(figs$multi_model[c('kyn_trp', 'tyr', 'phe_tyr')],
-         c(0.7, 0.3, 0.3),
+         c(0.8, 2.5, 1.5),
          ~.x + expand_limits(x = .y))
 
   figs$multi_model <- c(figs$multi_model[c('trp', 'kyn', 'kyn_trp')],
@@ -144,31 +201,31 @@
               axis = 'tblr',
               labels = c('A', '', '', '', 'B'),
               label_size = 10) %>%
-    as_figure(label = 'figure_4_multi_modeling',
+    as_figure(label = 'figure_5_multi_modeling',
               ref_name = 'multi_model',
               caption = paste('Results of multi-parameter modeling of',
                               'aminoacid neurotransmitter precursor and their',
                               'decay products.'),
               w = 180,
-              h = 190)
+              h = 215)
 
-# Figure 5: analysis summary --------
+# Figure 7: analysis summary --------
 
-  insert_msg('Figure 5: analysis summary')
+  insert_msg('Figure 7: analysis summary')
 
   figs$summary <- ggdraw() +
     draw_image('./aux files/summary.png')
 
   figs$summary <- figs$summary %>%
-    as_figure(label = 'figure_5_summary',
+    as_figure(label = 'figure_7_summary',
               ref_name = 'summary',
               caption = paste('Schematic representation of effects of',
                               'inflammation, SARS-CoV-2 and',
                               'depression/anxiety symptoms on indolamine',
                               'and catecholamine neurotransmitter',
                               'precursor metabolism.'),
-              w = 180,
-              h = 1974/4014 * 180)
+              w = 90,
+              h = 1752/1854 * 90)
 
 # Saving the figures on the disc ------
 

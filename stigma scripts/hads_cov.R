@@ -1,4 +1,5 @@
-# Effects of each HADS strata and CoV status on metabolic
+# Effects of each HADS strata, CoV status and persistent somatic symptoms
+# on metabolic
 # and inflammatory variables. Comparisons with Mann-Whitney U test.
 
   insert_head()
@@ -11,7 +12,7 @@
 
   insert_msg('Analysis globals')
 
-  ## variables following transformation to improve normality and EOV
+  ## variables
 
   hads_cov$variables <-
     set_names(as.character(distr$stigma_normality_best$variable),
@@ -61,7 +62,7 @@
                                                            dict = globals$stigma_lexicon,
                                                            key = 'variable',
                                                            value = 'base_label') %>%
-                                       paste('STIGMA', sep = ', '),
+                                       paste('SIMMUN', sep = ', '),
                                      y_lab = exchange(stats$variable,
                                                       dict = globals$stigma_lexicon,
                                                       key = 'variable',

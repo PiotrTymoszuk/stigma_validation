@@ -15,7 +15,7 @@ insert_head()
 
   insert_msg('Rendering the paper')
 
-  render('./paper/markdown/manuscript.Rmd',
+  render('./paper/markdown/methods_figures_tables.Rmd',
          output_format = word_document2(number_sections = FALSE,
                                         reference_docx = 'ms_template.docx'),
          output_dir = './paper')

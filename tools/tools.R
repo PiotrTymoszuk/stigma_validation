@@ -270,4 +270,71 @@
 
   }
 
+# modeling plots -------
+
+  plot_rsq_rmse <- function(cv_stats,
+                            plot_subtitle = NULL,
+                            y_factor = 'response') {
+
+    list(x = c('rsq', 'RMSE'),
+         y = c('R\u00B2', 'RMSE'),
+         z = c('Explanatory power',
+               'Model error')) %>%
+      pmap(function(x, y, z) cv_stats %>%
+             filter(statistic == x) %>%
+             ggplot(aes(x = estimate,
+                        y = .data[[y_factor]],
+                        fill = prediction)) +
+             geom_bar(stat = 'identity',
+                      position = position_dodge(0.9),
+                      color = 'black') +
+             geom_text(aes(label = signif(estimate, 2)),
+                       size = 2.75,
+                       hjust = -0.5,
+                       position = position_dodge(0.9)) +
+             scale_fill_manual(values = c('steelblue3', 'indianred4'),
+                               labels = c('training', '10-fold CV'),
+                               name = '') +
+             globals$common_theme +
+             theme(axis.title.y = element_blank()) +
+             labs(title = z,
+                  subtitle = plot_subtitle,
+                  x = y)) %>%
+      set_names(c('rsq', 'RMSE'))
+
+  }
+
+  est_bubble <- function(est_data,
+                         plot_title = NULL,
+                         plot_subtitle = NULL,
+                         x_lab = expression(beta)) {
+
+    ## plots model estimates in form of a bubble plot
+
+    ggplot(est_data,
+           aes(x = estimate,
+               y = reorder(y_ax, estimate),
+               fill = estimate,
+               size = abs(estimate))) +
+      geom_vline(xintercept = 0,
+                 linetype = 'dashed') +
+      geom_point(shape = 21) +
+      geom_text(aes(label = signif(estimate, 2)),
+                size = 2.75,
+                vjust = -1.5) +
+      scale_size_area(max_size = 6) +
+      scale_fill_gradient2(low = 'steelblue',
+                           mid = 'white',
+                           high = 'coral3',
+                           midpoint = 0,
+                           name = expression(beta)) +
+      guides(size = 'none') +
+      globals$common_theme +
+      theme(axis.title.y = element_blank()) +
+      labs(title = plot_title,
+           subtitle = plot_subtitle,
+           x = x_lab)
+
+  }
+
 # END ------

@@ -73,7 +73,7 @@
                        name = 'Correlation') +
     globals$common_theme +
     theme(axis.title.y = element_blank()) +
-    labs(title = 'STIGMA response variables and age',
+    labs(title = 'SIMMUN response variables and age',
          subtitle = "Pearson's correlation",
          x = 'r \u00B1 95% CI')
 
@@ -87,7 +87,7 @@
                                dict = globals$stigma_lexicon,
                                key = 'variable',
                                value = 'base_label') %>%
-           paste('STIGMA', sep = ', '),
+           paste('SIMMUN', sep = ', '),
          sub = age$test$plot_cap,
          y_lab = exchange(age$variables,
                           dict = globals$stigma_lexicon,

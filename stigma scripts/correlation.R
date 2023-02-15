@@ -12,8 +12,7 @@
 
   insert_msg('Analysis globals')
 
-  ## variables with the best overall normality after transformation
-  ## are selected for the analysis (they will be used later for ANCOVA)
+  ## variables
 
   met_infl$variables <- globals$stigma_lexicon %>%
     filter(response == 'yes',
@@ -70,8 +69,8 @@
 
   met_infl$bubble_plots <-
     map2(met_infl$test,
-         c('uninfected, STIGMA',
-           'CoV recovery, STIGMA'),
+         c('uninfected, SIMMUN',
+           'CoV recovery, SIMMUN'),
          ~ggplot(.x,
                  aes(x = variable1,
                      y = variable2,
@@ -110,8 +109,6 @@
 
   insert_msg('Point plots')
 
-  insert_msg('Point plots for the correlations')
-
   ## healthy participants
 
   met_infl$point_plots$healthy <-
@@ -120,7 +117,7 @@
                           dict = globals$stigma_lexicon,
                           key = 'variable',
                           value = 'base_label') %>%
-           paste(., 'healthy, STIGMA', sep = ', '),
+           paste(., 'healthy, SIMMUN', sep = ', '),
          sub = met_infl$test$healthy$plot_cap,
          x_lab = exchange(map_chr(met_infl$pairs, ~.x[[1]]),
                           dict = globals$stigma_lexicon,
@@ -156,7 +153,7 @@
                           dict = globals$stigma_lexicon,
                           key = 'variable',
                           value = 'base_label') %>%
-           paste(., 'CoV recovery, STIGMA', sep = ', '),
+           paste(., 'CoV recovery, SIMMUN', sep = ', '),
          sub = met_infl$test$cov$plot_cap,
          x_lab = exchange(map_chr(met_infl$pairs, ~.x[[1]]),
                           dict = globals$stigma_lexicon,

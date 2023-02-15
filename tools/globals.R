@@ -54,7 +54,12 @@
          hads_anx_score = c('HADS, anxiety score', NA, NA),
          hads_dpr_score = c('HADS, depression score', NA, NA),
          hads_signs = c('anxiety/depression signs', NA, NA),
-         pss = c('persistent somatic symptoms', NA, NA),
+         pss_stress_score = c('PSS-4, stress score', NA, NA),
+         log_pss_stress_score = c('log PSS-4, stress score', NA, NA),
+         sqrt_pss_stress_score = c('sqrt PSS-4, stress score', NA, NA),
+         phq_dpr_score = c('PHQ-9, depression score', NA, NA),
+         log_phq_dpr_score = c('log PHQ-9, depression score', NA, NA),
+         sqrt_phq_dpr_score = c('sqrt PHQ-9, depression score', NA, NA),
          study_group = c('study group', NA, NA),
          neo = c('NEO', 'nmol/L', 'inflammation'),
          log_neo = c('log NEO', 'nmol/L', 'inflammation'),
@@ -94,7 +99,10 @@
          sqrt_no = c('sqrt NO', 'µmol/L', 'inflammation'),
          neutro = c('neutro', '%', 'inflammation'),
          log_neutro = c('log neutro', '%', 'inflammation'),
-         sqrt_neutro = c('sqrt neutro', '%', 'inflammation')) %>%
+         sqrt_neutro = c('sqrt neutro', '%', 'inflammation'),
+         anti_rbd = c('anti-RBD IgG', 'AU', NA),
+         log_anti_rbd = c('log anti-RBD IgG', 'AU', NA),
+         sqrt_anti_rbd = c('sqrt anti-RBD IgG', 'AU', NA)) %>%
     compress(names_to = 'variable',
              values_to = 'lab_list') %>%
     mutate(label = map_chr(lab_list, ~.x[[1]]),
@@ -108,7 +116,7 @@
 
   globals$stigma_lexicon <- globals$stigma_lexicon %>%
     mutate(response = ifelse(stri_detect(variable,
-                                         regex = '(age)|(sex)|(hads)|(pss)|(study_group)'),
+                                         regex = '(age)|(sex)|(hads)|(pss)|(study_group)|(phq)'),
                              'no', 'yes'),
            base_label = stri_replace(label,
                                      regex = '(log\\s{1})|(sqrt\\s{1})',
@@ -144,12 +152,6 @@
                                  'dopamine 3-O-sulfate',
                                  'serotonin',
                                  'quinolinate')
-
-  globals$incov_lexicon <-
-    rbind(incov$annotation_proteome %>%
-            filter(variable %in% globals$incov_proteins),
-          incov$annotation_metabolome %>%
-            filter(variable %in% globals$incov_metabolites))
 
 # Labels for the time points, INCOV cohort ------
 

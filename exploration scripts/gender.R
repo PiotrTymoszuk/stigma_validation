@@ -19,6 +19,18 @@
            variable %in% distr$stigma_normality_best$variable) %>%
     .$variable
 
+# N numbers -------
+
+  insert_msg('N numbers')
+
+  gender$n_numbers <- gender$variables %>%
+    map(~stigma$data[c('sex', .x)]) %>%
+    map(~filter(.x, complete.cases(.x))) %>%
+    map(count, sex)
+
+  gender$ax_labs <- gender$n_numbers  %>%
+    map(~map2_chr(.x[[1]], .x[[2]], paste, sep = '\nn = '))
+
 # descriptive stats -------
 
   insert_msg('Descriptive stats')
@@ -64,7 +76,7 @@
                                dict = globals$stigma_lexicon,
                                key = 'variable',
                                value = 'base_label') %>%
-           paste('STIGMA', sep = ', '),
+           paste('SIMMUN', sep = ', '),
          plot_subtitle = gender$test$significance,
          y_lab = exchange(gender$variables,
                           dict = globals$stigma_lexicon,
@@ -76,13 +88,16 @@
          type = 'box',
          point_hjitter = 0,
          cust_theme = globals$common_theme) %>%
-    map(~.x +
-          scale_fill_manual(values = c(female = 'indianred3',
-                                       male = 'cornflowerblue')) +
-          labs(tag = .x$labels$tag %>%
-                 stri_replace(fixed = '\n',
-                              replacement = ', ') %>%
-                 paste0('\n', .))) %>%
+    map2(., gender$ax_labs,
+         ~.x +
+           scale_x_discrete(labels = .y) +
+           scale_fill_manual(values = c(female = 'indianred3',
+                                        male = 'cornflowerblue')) +
+           theme(plot.tag = element_blank()) +
+           labs(tag = .x$labels$tag %>%
+                  stri_replace(fixed = '\n',
+                               replacement = ', ') %>%
+                  paste0('\n', .))) %>%
     set_names(gender$variables)
 
 # END ------
